@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 페이지 - 시헌테크</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="logo">시헌테크 관리자</h1>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">사용자 페이지로</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- 메인 컨텐츠 -->
+    <main class="main admin-main">
+        <div class="container">
+            <!-- 새 매뉴얼 작성 섹션 -->
+            <section class="admin-section">
+                <div class="section-header">
+                    <h2 class="section-title">매뉴얼 작성</h2>
+                </div>
+
+                <form id="manualForm" class="admin-form">
+                    <input type="hidden" id="manualId">
+                    
+                    <div class="form-group">
+                        <label for="title" class="form-label">제목</label>
+                        <input 
+                            type="text" 
+                            id="title" 
+                            class="form-input" 
+                            placeholder="매뉴얼 제목을 입력하세요"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category" class="form-label">카테고리</label>
+                        <select id="category" class="form-select" required>
+                            <option value="">카테고리 선택</option>
+                            <option value="레이저 프린터">레이저 프린터</option>
+                            <option value="잉크젯 프린터">잉크젯 프린터</option>
+                            <option value="복합기">복합기</option>
+                            <option value="기타">기타</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="content" class="form-label">내용</label>
+                        <textarea 
+                            id="content" 
+                            class="form-textarea" 
+                            rows="10"
+                            placeholder="매뉴얼 내용을 입력하세요"
+                            required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tags" class="form-label">태그</label>
+                        <input 
+                            type="text" 
+                            id="tags" 
+                            class="form-input" 
+                            placeholder="쉼표(,)로 구분하여 입력 (예: 용지걸림, 출력불량, 에러코드)">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="isPublished" checked>
+                            <span>즉시 공개</span>
+                        </label>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" id="submitBtn" class="btn btn-primary btn-large">등록하기</button>
+                        <button type="button" id="cancelBtn" class="btn btn-secondary btn-large" style="display: none;">취소</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- 매뉴얼 관리 섹션 -->
+            <section class="admin-section">
+                <div class="section-header">
+                    <h2 class="section-title">매뉴얼 관리</h2>
+                    <div class="admin-filter">
+                        <select id="adminCategoryFilter" class="form-select-sm">
+                            <option value="all">전체 카테고리</option>
+                            <option value="레이저 프린터">레이저 프린터</option>
+                            <option value="잉크젯 프린터">잉크젯 프린터</option>
+                            <option value="복합기">복합기</option>
+                            <option value="기타">기타</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="admin-table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 40%;">제목</th>
+                                <th style="width: 15%;">카테고리</th>
+                                <th style="width: 10%;">조회수</th>
+                                <th style="width: 10%;">공개여부</th>
+                                <th style="width: 15%;">작성일</th>
+                                <th style="width: 10%;">관리</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminManualList">
+                            <!-- JavaScript로 동적 생성 -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="adminEmptyState" class="empty-state" style="display: none;">
+                    <p class="empty-message">등록된 매뉴얼이 없습니다</p>
+                </div>
+
+                <div id="adminLoadingState" class="loading-state">
+                    <p>로딩 중...</p>
+                </div>
+
+                <!-- 페이지네이션 -->
+                <div id="adminPagination" class="pagination">
+                    <!-- JavaScript로 동적 생성 -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- 삭제 확인 모달 -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h3 class="modal-title">매뉴얼 삭제</h3>
+            </div>
+            <div class="modal-body">
+                <p class="modal-text">정말 삭제하시겠습니까?</p>
+                <p class="modal-description">삭제된 매뉴얼은 복구할 수 없습니다.</p>
+            </div>
+            <div class="modal-footer">
+                <button id="confirmDelete" class="btn btn-danger">삭제</button>
+                <button id="cancelDelete" class="btn btn-secondary">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>
