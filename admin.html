@@ -6,8 +6,13 @@
     <title>관리자 페이지 - 시헌테크</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="js/auth.js"></script>
 </head>
 <body>
+    <script>
+        // 로그인되지 않은 사용자는 login.html로 리다이렉트
+        requireAdminAuth();
+    </script>
     <!-- 헤더 -->
     <header class="header">
         <div class="container">
@@ -19,6 +24,9 @@
                 </div>
                 <nav class="nav">
                     <a href="index.html" class="nav-link">사용자 페이지로</a>
+                    <button class="btn btn-secondary btn-sm" type="button" onclick="adminLogout()" style="margin-left: 8px;">
+                        로그아웃
+                    </button>
                 </nav>
             </div>
         </div>
