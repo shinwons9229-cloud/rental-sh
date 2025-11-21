@@ -2,36 +2,42 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>시헌테크 | 프린트 AS 매뉴얼</title>
+  <title>시헌테크 | AS 매뉴얼</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
+      /* 시헌테크 브랜드용 파란 글씨톤 */
       --color-primary: #0064ff;
-      --color-primary-soft: #e8f3ff;
-      --color-bg: #f2f4f6;
+      --color-primary-hover: #0056e0;
+      --color-primary-soft: #e8f1ff;
+      --color-bg: #f9fbff;
       --color-surface: #ffffff;
-      --color-border: #e5e8eb;
-      --color-text-main: #191f28;
-      --color-text-sub: #4e5968;
-      --color-label: #8b95a1;
+      --color-border: #d7e3f7;
+      --color-border-strong: #b6c9eb;
+      --color-text-main: #1b3d73;
+      --color-text-sub: #4b5b82;
+      --color-label: #8ea1c8;
+      --color-inkjet: #00C896;
+      --color-laser: #0064ff;
+      --color-cleaner: #A259FF;
       --radius-lg: 16px;
       --radius-md: 12px;
-      --radius-sm: 8px;
-      --shadow-soft: 0 10px 30px rgba(0, 23, 51, 0.08);
-      --max-width: 1040px;
+      --max-width: 1140px;
+      --shadow-soft: 0 10px 24px rgba(0, 40, 120, 0.08);
     }
 
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-        "Noto Sans KR", system-ui, sans-serif;
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
       background-color: var(--color-bg);
       color: var(--color-text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
     }
 
     a {
@@ -39,276 +45,109 @@
       text-decoration: none;
     }
 
-    .page {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
     /* 헤더 */
     header {
       position: sticky;
       top: 0;
-      z-index: 10;
-      background-color: rgba(255, 255, 255, 0.96);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(229, 232, 235, 0.7);
+      z-index: 100;
+      background-color: rgba(255, 255, 255, 0.8);
+      backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--color-border);
     }
 
     .header-inner {
       max-width: var(--max-width);
       margin: 0 auto;
-      padding: 16px 20px;
+      padding: 0 24px;
+      height: 64px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
     }
 
-    .logo-wrap {
+    .logo-container {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 16px;
       cursor: pointer;
     }
 
-    .logo-mark {
-      width: 28px;
-      height: 28px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 30%, #4aa8ff, #0064ff);
+    .logo-image {
+      height: 32px;
+      width: auto;
     }
 
-    .logo-text-main {
-      font-weight: 700;
+    .logo-divider {
+      width: 1px;
+      height: 24px;
+      background-color: var(--color-border);
+    }
+
+    .logo-text {
       font-size: 18px;
-      letter-spacing: -0.03em;
-    }
-
-    .logo-text-sub {
-      font-size: 11px;
-      color: var(--color-label);
-    }
-
-    .nav {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 14px;
-    }
-
-    .nav a {
-      padding: 6px 10px;
-      border-radius: 999px;
+      font-weight: 600;
       color: var(--color-text-sub);
-      transition: background-color 0.15s ease, color 0.15s ease;
-    }
-
-    .nav a.is-active,
-    .nav a:hover {
-      background-color: var(--color-primary-soft);
-      color: var(--color-primary);
-    }
-
-    .nav-secondary {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .nav-link-text {
-      font-size: 12px;
-      color: var(--color-label);
     }
 
     .nav-button {
-      padding: 6px 12px;
-      border-radius: 999px;
-      border: 1px solid var(--color-border);
-      background-color: #ffffff;
-      font-size: 12px;
+      padding: 8px 20px;
+      border-radius: 8px;
+      border: none;
+      background-color: var(--color-text-main);
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
       cursor: pointer;
-      transition: background-color 0.15s ease, box-shadow 0.15s ease,
-        border-color 0.15s ease;
+      transition: transform 0.2s;
     }
 
     .nav-button:hover {
-      background-color: #f9fafb;
-      box-shadow: 0 4px 12px rgba(0, 23, 51, 0.06);
-      border-color: #d1d6db;
+      transform: scale(1.05);
     }
 
-    /* 메인 컨텐츠 */
+    /* 메인 */
     main {
-      flex: 1;
-    }
-
-    .main-inner {
       max-width: var(--max-width);
       margin: 0 auto;
-      padding: 32px 20px 40px;
-      display: grid;
-      grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.2fr);
-      gap: 24px;
-    }
-
-    @media (max-width: 880px) {
-      .main-inner {
-        grid-template-columns: minmax(0, 1fr);
-      }
-      .nav {
-        display: none;
-      }
+      padding: 0 24px;
     }
 
     /* 히어로 */
     .hero {
-      background: linear-gradient(135deg, #ffffff 0%, #f8faff 60%, #e8f3ff 100%);
-      border-radius: var(--radius-lg);
-      padding: 28px 24px;
-      box-shadow: var(--shadow-soft);
-      border: 1px solid rgba(229, 232, 235, 0.6);
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      align-self: flex-start;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 11px;
-      background-color: rgba(0, 100, 255, 0.06);
-      color: var(--color-primary);
-      font-weight: 500;
+      padding: 80px 0 60px;
+      text-align: center;
     }
 
     .hero-title {
-      font-size: 26px;
-      line-height: 1.2;
-      letter-spacing: -0.04em;
+      font-size: 56px;
       font-weight: 700;
-    }
-
-    .hero-title span {
-      color: var(--color-primary);
+      letter-spacing: -2px;
+      line-height: 1.2;
+      margin-bottom: 24px;
+      color: var(--color-text-main);
     }
 
     .hero-desc {
-      font-size: 13px;
+      font-size: 20px;
+      color: var(--color-text-sub);
       line-height: 1.6;
-      color: var(--color-text-sub);
+      margin-bottom: 48px;
     }
 
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .hero-primary {
-      padding: 10px 16px;
-      border-radius: 999px;
-      border: none;
-      background-color: var(--color-primary);
-      color: #ffffff;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 10px 24px rgba(0, 100, 255, 0.35);
-      transition: background-color 0.15s ease, box-shadow 0.15s ease,
-        transform 0.08s ease;
-    }
-
-    .hero-primary:hover {
-      background-color: #0056e0;
-      box-shadow: 0 12px 30px rgba(0, 100, 255, 0.45);
-      transform: translateY(-1px);
-    }
-
-    .hero-secondary {
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid var(--color-border);
-      background-color: rgba(255, 255, 255, 0.9);
-      font-size: 13px;
-      color: var(--color-text-sub);
-      cursor: pointer;
-      transition: background-color 0.15s ease, border-color 0.15s ease,
-        box-shadow 0.15s ease;
-    }
-
-    .hero-secondary:hover {
-      background-color: #f9fafb;
-      border-color: #d1d6db;
-      box-shadow: 0 6px 20px rgba(0, 23, 51, 0.06);
-    }
-
-    .hero-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      font-size: 11px;
-      color: var(--color-label);
-    }
-
-    .hero-meta-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 9px;
-      border-radius: 999px;
-      background-color: rgba(248, 250, 252, 0.9);
-      border: 1px solid rgba(229, 232, 235, 0.9);
-    }
-
-    .hero-meta-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 999px;
-      background-color: var(--color-primary);
-    }
-
-    /* 검색 / 필터 */
-    .search-panel {
-      background-color: var(--color-surface);
-      border-radius: var(--radius-lg);
-      padding: 20px 18px 18px;
-      border: 1px solid var(--color-border);
-      box-shadow: 0 6px 18px rgba(0, 23, 51, 0.06);
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .search-title {
-      font-size: 15px;
-      font-weight: 600;
-      margin-bottom: 2px;
-    }
-
-    .search-desc {
-      font-size: 12px;
-      color: var(--color-text-sub);
-    }
-
-    .search-input-wrap {
-      position: relative;
+    .search-box {
+      max-width: 600px;
+      margin: 0 auto 64px;
     }
 
     .search-input {
       width: 100%;
-      padding: 10px 12px 10px 12px;
-      border-radius: 999px;
+      padding: 18px 24px;
+      border-radius: 12px;
       border: 1px solid var(--color-border);
-      background-color: #f9fafb;
-      font-size: 13px;
+      background-color: var(--color-surface);
+      font-size: 17px;
       outline: none;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease,
-        background-color 0.15s ease;
+      transition: all 0.2s;
     }
 
     .search-input::placeholder {
@@ -317,212 +156,232 @@
 
     .search-input:focus {
       border-color: var(--color-primary);
-      background-color: #ffffff;
-      box-shadow: 0 0 0 1px rgba(0, 100, 255, 0.18);
+      box-shadow: 0 0 0 1px rgba(0, 100, 255, 0.28);
     }
 
-    .filter-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
+    /* 카테고리 */
+    .category-section {
+      margin-bottom: 80px;
     }
 
-    .chip {
-      padding: 6px 11px;
-      font-size: 11px;
-      border-radius: 999px;
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .category-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      padding: 40px 32px;
       border: 1px solid var(--color-border);
-      background-color: #ffffff;
-      color: var(--color-text-sub);
       cursor: pointer;
-      transition: background-color 0.15s ease, color 0.15s ease,
-        border-color 0.15s ease, box-shadow 0.15s ease;
+      transition: all 0.3s ease;
+      text-align: center;
     }
 
-    .chip.is-active,
-    .chip:hover {
-      background-color: var(--color-primary-soft);
-      border-color: #c9e2ff;
-      color: var(--color-primary);
-      box-shadow: 0 6px 16px rgba(0, 100, 255, 0.18);
+    .category-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-soft);
+      border-color: var(--color-border-strong);
     }
 
-    .search-meta {
-      font-size: 11px;
-      color: var(--color-label);
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
+    .category-card.active {
+      border-color: var(--cat-color);
+      background: var(--cat-bg);
     }
 
-    /* 리스트 섹션 */
-    .section {
-      margin-top: 26px;
+    .category-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--color-text-main);
+    }
+
+    .category-card.active .category-title {
+      color: var(--cat-color);
+    }
+
+    .category-count {
+      font-size: 15px;
+      color: var(--color-text-sub);
+      font-weight: 500;
+    }
+
+    .category-card.active .category-count {
+      color: var(--cat-color);
+    }
+
+    /* 카테고리 색상 */
+    .cat-inkjet {
+      --cat-color: #00C896;
+      --cat-bg: #F0FDF9;
+    }
+
+    .cat-laser {
+      --cat-color: #0064ff;
+      --cat-bg: #e8f1ff;
+    }
+
+    .cat-cleaner {
+      --cat-color: #A259FF;
+      --cat-bg: #F9F5FF;
+    }
+
+    /* 매뉴얼 섹션 */
+    .manual-section {
+      margin-bottom: 100px;
     }
 
     .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      gap: 8px;
-      margin-bottom: 10px;
+      margin-bottom: 32px;
     }
 
     .section-title {
-      font-size: 16px;
-      font-weight: 600;
-      letter-spacing: -0.03em;
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
     }
 
-    .section-sub {
-      font-size: 12px;
+    .section-desc {
+      font-size: 17px;
       color: var(--color-text-sub);
     }
 
-    .section-link {
-      font-size: 12px;
-      color: var(--color-label);
-      cursor: pointer;
-    }
-
-    /* 카드 리스트 */
-    .card-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .card {
-      background-color: var(--color-surface);
-      border-radius: var(--radius-md);
-      padding: 14px 16px;
-      border: 1px solid rgba(229, 232, 235, 0.9);
+    /* 매뉴얼 그리드 */
+    .manual-grid {
       display: grid;
-      grid-template-columns: minmax(0, 3fr) minmax(0, 1.2fr);
-      gap: 8px;
-      cursor: pointer;
-      transition: box-shadow 0.12s ease, transform 0.08s ease,
-        border-color 0.12s ease, background-color 0.12s ease;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
     }
 
-    .card:hover {
-      box-shadow: 0 8px 22px rgba(0, 23, 51, 0.09);
-      transform: translateY(-1px);
-      border-color: #d1d6db;
-      background-color: #ffffff;
-    }
-
-    @media (max-width: 720px) {
-      .card {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-
-    .card-title-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      align-items: center;
-      margin-bottom: 6px;
-    }
-
-    .card-title {
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .card-tag {
-      font-size: 10px;
-      padding: 3px 8px;
-      border-radius: 999px;
-      background-color: #f2f4f6;
-      color: var(--color-text-sub);
-    }
-
-    .card-desc {
-      font-size: 12px;
-      color: var(--color-text-sub);
-      line-height: 1.5;
-    }
-
-    .card-meta {
-      font-size: 11px;
-      color: var(--color-label);
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-      gap: 10px;
-      text-align: right;
-    }
-
-    .card-meta-item {
-      white-space: nowrap;
-    }
-
-    /* FAQ 섹션 */
-    .faq-card {
-      background-color: var(--color-surface);
+    .manual-card {
+      background: var(--color-surface);
       border-radius: var(--radius-md);
-      padding: 14px 16px;
-      border: 1px solid rgba(229, 232, 235, 0.9);
+      padding: 28px;
+      border: 1px solid var(--color-border);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .manual-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 30px rgba(0, 40, 120, 0.12);
+      border-color: var(--color-border-strong);
+    }
+
+    .manual-header {
       display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .faq-item {
-      border-radius: 10px;
-      padding: 8px 10px;
-      background-color: #f9fafb;
-      border: 1px solid #e5e8eb;
-    }
-
-    .faq-q {
-      font-size: 12px;
-      font-weight: 500;
-      margin-bottom: 4px;
-    }
-
-    .faq-a {
-      font-size: 12px;
-      color: var(--color-text-sub);
-      line-height: 1.5;
-    }
-
-    /* 푸터 */
-    footer {
-      border-top: 1px solid rgba(229, 232, 235, 0.8);
-      background-color: #ffffff;
-    }
-
-    .footer-inner {
-      max-width: var(--max-width);
-      margin: 0 auto;
-      padding: 16px 20px 18px;
-      display: flex;
-      flex-wrap: wrap;
       justify-content: space-between;
-      gap: 8px;
-      font-size: 11px;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .manual-title {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.4;
+      flex: 1;
+      color: var(--color-primary);
+    }
+
+    .manual-badge {
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+      background: var(--badge-bg);
+      color: var(--badge-color);
+    }
+
+    .badge-inkjet {
+      --badge-bg: #F0FDF9;
+      --badge-color: #00C896;
+    }
+
+    .badge-laser {
+      --badge-bg: #e8f1ff;
+      --badge-color: #0064ff;
+    }
+
+    .badge-cleaner {
+      --badge-bg: #F9F5FF;
+      --badge-color: #A259FF;
+    }
+
+    .manual-desc {
+      font-size: 15px;
+      color: var(--color-text-sub);
+      line-height: 1.6;
+      margin-bottom: 16px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .manual-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
       color: var(--color-label);
+      padding-top: 16px;
+      border-top: 1px solid var(--color-border);
     }
 
-    .footer-left {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
+    /* 상태 */
+    .loading-state,
+    .empty-state {
+      text-align: center;
+      padding: 100px 20px;
+      color: var(--color-label);
+      font-size: 17px;
     }
 
-    .footer-links {
+    .hidden {
+      display: none !important;
+    }
+
+    /* 페이지네이션 */
+    .pagination {
       display: flex;
-      flex-wrap: wrap;
+      justify-content: center;
       gap: 8px;
+      margin-top: 48px;
     }
 
-    .footer-links a {
-      text-decoration: underline;
-      text-underline-offset: 2px;
+    .page-btn {
+      min-width: 44px;
+      height: 44px;
+      padding: 0 16px;
+      border: 1px solid var(--color-border);
+      background: var(--color-surface);
+      color: var(--color-text-main);
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .page-btn:hover:not(:disabled) {
+      background: var(--color-primary-soft);
+      border-color: var(--color-border-strong);
+    }
+
+    .page-btn.active {
+      background: var(--color-primary);
+      color: white;
+      border-color: var(--color-primary);
+    }
+
+    .page-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
     }
 
     /* 모달 */
@@ -548,88 +407,86 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.5);
     }
 
     .modal-content {
       position: relative;
-      background-color: var(--color-surface);
+      background: var(--color-surface);
       border-radius: var(--radius-lg);
       max-width: 800px;
       width: 90%;
       max-height: 85vh;
       overflow-y: auto;
-      box-shadow: 0 20px 60px rgba(0, 23, 51, 0.3);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     }
 
     .modal-header {
-      padding: 24px;
+      padding: 32px;
       border-bottom: 1px solid var(--color-border);
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
+      gap: 24px;
     }
 
     .modal-title {
-      font-size: 20px;
+      font-size: 28px;
       font-weight: 700;
-      color: var(--color-text-main);
+      line-height: 1.4;
+      flex: 1;
     }
 
     .modal-close {
       background: none;
       border: none;
-      font-size: 28px;
+      font-size: 32px;
       color: var(--color-label);
       cursor: pointer;
       line-height: 1;
-      padding: 0;
-      width: 32px;
-      height: 32px;
+      width: 40px;
+      height: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 50%;
+      border-radius: 8px;
       transition: all 0.2s;
+      flex-shrink: 0;
     }
 
     .modal-close:hover {
-      background-color: var(--color-bg);
+      background: var(--color-bg);
       color: var(--color-text-main);
     }
 
     .modal-body {
-      padding: 24px;
+      padding: 32px;
     }
 
     .modal-meta {
       display: flex;
       gap: 12px;
       align-items: center;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
+      margin-bottom: 28px;
     }
 
     .modal-badge {
-      font-size: 11px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background-color: var(--color-primary-soft);
-      color: var(--color-primary);
-      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 700;
     }
 
     .modal-views {
       color: var(--color-label);
-      font-size: 12px;
+      font-size: 15px;
     }
 
     .modal-text {
-      color: var(--color-text-main);
-      font-size: 14px;
+      font-size: 17px;
       line-height: 1.8;
       white-space: pre-wrap;
-      margin-bottom: 20px;
+      margin-bottom: 28px;
     }
 
     .modal-tags {
@@ -639,233 +496,150 @@
     }
 
     .modal-tag {
-      padding: 4px 10px;
-      background-color: var(--color-bg);
+      padding: 8px 14px;
+      background: var(--color-bg);
       color: var(--color-text-sub);
-      border-radius: 999px;
-      font-size: 11px;
-    }
-
-    /* 로딩 및 empty */
-    .loading-state,
-    .empty-state {
-      text-align: center;
-      padding: 60px 20px;
-      color: var(--color-label);
+      border-radius: 8px;
       font-size: 14px;
+      font-weight: 500;
     }
 
-    .hidden {
-      display: none !important;
+    /* 푸터 */
+    footer {
+      border-top: 1px solid var(--color-border);
+      background: var(--color-surface);
+      margin-top: 120px;
     }
 
-    /* 페이지네이션 */
-    .pagination {
-      display: flex;
-      justify-content: center;
-      gap: 6px;
-      margin-top: 20px;
+    .footer-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 40px 24px;
+      text-align: center;
+      font-size: 15px;
+      color: var(--color-label);
     }
 
-    .page-btn {
-      padding: 8px 12px;
-      border: 1px solid var(--color-border);
-      background-color: var(--color-surface);
-      color: var(--color-text-sub);
-      border-radius: var(--radius-sm);
-      font-size: 12px;
-      cursor: pointer;
-      transition: all 0.15s;
+    footer a {
+      color: var(--color-primary);
+      font-weight: 600;
     }
 
-    .page-btn:hover:not(:disabled) {
-      background-color: var(--color-bg);
+    /* 반응형 */
+    @media (max-width: 1024px) {
+      .hero-title {
+        font-size: 42px;
+      }
+
+      .manual-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
-    .page-btn.active {
-      background-color: var(--color-primary);
-      color: white;
-      border-color: var(--color-primary);
-    }
+    @media (max-width: 768px) {
+      .logo-image {
+        height: 26px;
+      }
 
-    .page-btn:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
+      .logo-text {
+        font-size: 16px;
+      }
+
+      .hero {
+        padding: 60px 0 40px;
+      }
+
+      .hero-title {
+        font-size: 36px;
+      }
+
+      .hero-desc {
+        font-size: 17px;
+      }
+
+      .category-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .manual-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-title {
+        font-size: 28px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="page">
-    <header>
-      <div class="header-inner">
-        <div class="logo-wrap" onclick="location.reload()">
-          <div class="logo-mark"></div>
-          <div>
-            <div class="logo-text-main">시헌테크</div>
-            <div class="logo-text-sub">프린트 AS 매뉴얼 센터</div>
-          </div>
+  <header>
+    <div class="header-inner">
+      <div class="logo-container" onclick="location.reload()">
+        <img src="https://www.genspark.ai/api/files/s/nZUGwpE8" alt="시헌테크" class="logo-image">
+        <div class="logo-divider"></div>
+        <div class="logo-text">AS 매뉴얼</div>
+      </div>
+      <button class="nav-button" onclick="location.href='admin.html'">관리자</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- 히어로 -->
+    <section class="hero">
+      <h1 class="hero-title">빠르고 정확한<br>AS 매뉴얼</h1>
+      <p class="hero-desc">프린터와 공기청정기의 모든 문제를 해결하세요</p>
+      
+      <div class="search-box">
+        <input
+          type="search"
+          id="searchInput"
+          class="search-input"
+          placeholder="증상이나 모델명을 검색하세요"
+        />
+      </div>
+
+      <!-- 카테고리 -->
+      <div class="category-grid">
+        <div class="category-card cat-inkjet active" data-category="잉크젯 프린터" onclick="selectCategory('잉크젯 프린터', this)">
+          <div class="category-title">잉크젯 프린터</div>
+          <div class="category-count"><span id="countInkjet">0</span>개의 매뉴얼</div>
         </div>
-        <nav class="nav">
-          <a href="#" class="is-active">전체 매뉴얼</a>
-        </nav>
-        <div class="nav-secondary">
-          <span class="nav-link-text">관리자</span>
-          <button class="nav-button" onclick="location.href='admin.html'">
-            시헌테크 어드민
-          </button>
+
+        <div class="category-card cat-laser" data-category="레이저 프린터" onclick="selectCategory('레이저 프린터', this)">
+          <div class="category-title">레이저 프린터</div>
+          <div class="category-count"><span id="countLaser">0</span>개의 매뉴얼</div>
+        </div>
+
+        <div class="category-card cat-cleaner" data-category="공기청정기" onclick="selectCategory('공기청정기', this)">
+          <div class="category-title">공기청정기</div>
+          <div class="category-count"><span id="countCleaner">0</span>개의 매뉴얼</div>
         </div>
       </div>
-    </header>
+    </section>
 
-    <main>
-      <div class="main-inner">
-        <!-- 왼쪽: 히어로 + 리스트 -->
-        <section>
-          <div class="hero">
-            <div class="hero-badge">
-              최신 AS 가이드
-            </div>
-            <div>
-              <h1 class="hero-title">
-                프린트가 멈췄을 때,<br />
-                <span>시헌테크</span>에서 바로 확인하세요.
-              </h1>
-              <p class="hero-desc">
-                복잡한 설명서 대신, 실제 현장에서 바로 적용할 수 있는
-                AS 매뉴얼만 모았습니다.<br />
-                모델별, 증상별로 빠르게 찾아보고 따라 하도록 구성했습니다.
-              </p>
-            </div>
-            <div class="hero-actions">
-              <button class="hero-primary" onclick="scrollToManuals()">
-                등록된 매뉴얼 보기
-              </button>
-            </div>
-            <div class="hero-meta" id="heroMeta">
-              <div class="hero-meta-item">
-                <span class="hero-meta-dot"></span>
-                <span id="manualCount">로딩 중...</span>
-              </div>
-              <div class="hero-meta-item">
-                평균 해결 시간 5분 기준
-              </div>
-            </div>
-          </div>
-
-          <div class="section">
-            <div class="section-header">
-              <div>
-                <div class="section-title">등록된 매뉴얼</div>
-                <div class="section-sub">
-                  현장 기사님과 고객이 자주 조회한 순서로 정리했습니다.
-                </div>
-              </div>
-            </div>
-
-            <div id="loadingState" class="loading-state">로딩 중...</div>
-            <div id="emptyState" class="empty-state hidden">등록된 매뉴얼이 없습니다</div>
-            <div id="manualList" class="card-list"></div>
-            <div id="pagination" class="pagination"></div>
-          </div>
-        </section>
-
-        <!-- 오른쪽: 검색/필터 + FAQ -->
-        <aside>
-          <section class="search-panel">
-            <div>
-              <div class="search-title">모델명이나 증상으로 검색</div>
-              <p class="search-desc">
-                예) GX6090 용지 걸림, 양면 인쇄 줄 생김, 네트워크 인쇄 지연
-              </p>
-            </div>
-            <div class="search-input-wrap">
-              <input
-                type="search"
-                id="searchInput"
-                class="search-input"
-                placeholder="모델명, 증상, 키워드를 입력하세요"
-              />
-            </div>
-            <div class="filter-chips">
-              <button class="chip is-active" data-category="all">전체</button>
-              <button class="chip" data-category="레이저 프린터">레이저 프린터</button>
-              <button class="chip" data-category="잉크젯 프린터">잉크젯 프린터</button>
-              <button class="chip" data-category="복합기">복합기</button>
-              <button class="chip" data-category="기타">기타</button>
-            </div>
-            <div class="search-meta">
-              <span id="totalManuals">등록된 매뉴얼 로딩 중...</span>
-              <span>최근 조회순</span>
-            </div>
-          </section>
-
-          <section class="section">
-            <div class="section-header">
-              <div>
-                <div class="section-title">자주 묻는 질문</div>
-                <div class="section-sub">
-                  고객 상담 시 가장 많이 나오는 질문을 모았습니다.
-                </div>
-              </div>
-            </div>
-            <div class="faq-card">
-              <div class="faq-item">
-                <div class="faq-q">
-                  Q. 고객이 직접 따라 하기 어려운 내용은 어떻게 구분되나요?
-                </div>
-                <div class="faq-a">
-                  매뉴얼 상단에 고객용, 기사용이 명시됩니다. 고객에게는
-                  '고객용' 단계까지만 안내하고, 그 이후는 기사 방문이
-                  필요한 단계로 안내하면 됩니다.
-                </div>
-              </div>
-              <div class="faq-item">
-                <div class="faq-q">
-                  Q. 모델이 정확히 일치하지 않아도 매뉴얼을 써도 되나요?
-                </div>
-                <div class="faq-a">
-                  같은 시리즈, 같은 엔진을 사용하는 모델은 공용 매뉴얼로
-                  묶여 있습니다. 매뉴얼 상단의 적용 모델 목록을 먼저 확인한
-                  후 안내해 주세요.
-                </div>
-              </div>
-              <div class="faq-item">
-                <div class="faq-q">
-                  Q. 매뉴얼에 없는 증상은 어떻게 요청하나요?
-                </div>
-                <div class="faq-a">
-                  시헌테크 어드민에 신규 매뉴얼 요청 메뉴를 통해 남기거나,
-                  담당자에게 메모 형식으로 전달해 주시면 검토 후
-                  표준 매뉴얼로 등록됩니다.
-                </div>
-              </div>
-            </div>
-          </section>
-        </aside>
+    <!-- 매뉴얼 리스트 -->
+    <section class="manual-section">
+      <div class="section-header">
+        <h2 class="section-title" id="sectionTitle">잉크젯 프린터 매뉴얼</h2>
+        <p class="section-desc">자주 조회된 순서로 정리했습니다</p>
       </div>
-    </main>
 
-    <footer>
-      <div class="footer-inner">
-        <div class="footer-left">
-          <div>시헌테크 | 프린트 AS 매뉴얼 센터</div>
-          <div>현장 AS를 위한 표준 매뉴얼을 한 곳에 모았습니다.</div>
-        </div>
-        <div class="footer-right">
-          <div class="footer-links">
-            <a href="#">이용 안내</a>
-            <a href="#">개인정보 처리방침</a>
-            <a href="admin.html">어드민 로그인</a>
-          </div>
-          <div>© 2025 시헌테크</div>
-        </div>
-      </div>
-    </footer>
-  </div>
+      <div id="loadingState" class="loading-state">로딩 중...</div>
+      <div id="emptyState" class="empty-state hidden">등록된 매뉴얼이 없습니다</div>
+      <div id="manualList" class="manual-grid"></div>
+      <div id="pagination" class="pagination"></div>
+    </section>
+  </main>
 
-  <!-- 매뉴얼 상세 모달 -->
+  <footer>
+    <div class="footer-inner">
+      © 2025 시헌테크 · <a href="admin.html">관리자</a>
+    </div>
+  </footer>
+
+  <!-- 모달 -->
   <div id="manualModal" class="modal">
-    <div class="modal-overlay"></div>
+    <div class="modal-overlay" onclick="closeModal()"></div>
     <div class="modal-content">
       <div class="modal-header">
         <h3 id="modalTitle" class="modal-title"></h3>
@@ -883,5 +657,28 @@
   </div>
 
   <script src="js/main-simple.js"></script>
+  <script>
+    // 카테고리 선택
+    function selectCategory(category, element) {
+      document.querySelectorAll('.category-card').forEach(card => {
+        card.classList.remove('active');
+      });
+      element.classList.add('active');
+      
+      window.currentCategory = category;
+      window.currentPage = 1;
+      
+      const titleMap = {
+        '잉크젯 프린터': '잉크젯 프린터 매뉴얼',
+        '레이저 프린터': '레이저 프린터 매뉴얼',
+        '공기청정기': '공기청정기 매뉴얼'
+      };
+      document.getElementById('sectionTitle').textContent = titleMap[category];
+      
+      if (typeof loadManuals === 'function') {
+        loadManuals();
+      }
+    }
+  </script>
 </body>
 </html>

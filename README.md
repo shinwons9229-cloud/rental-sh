@@ -79,7 +79,7 @@
 |------|------|------|
 | id | text | 고유 ID (자동 생성) |
 | title | text | 매뉴얼 제목 |
-| category | text | 카테고리 (레이저 프린터, 잉크젯 프린터, 복합기, 기타) |
+| category | text | 카테고리 (잉크젯 프린터, 레이저 프린터, 공기청정기) |
 | content | rich_text | 매뉴얼 본문 내용 |
 | tags | text | 검색용 태그 (쉼표로 구분) |
 | views | number | 조회수 |

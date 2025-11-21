@@ -11,45 +11,53 @@
 }
 
 :root {
-    /* 토스 컬러 팔레트 */
-    --color-primary: #3182F6;
-    --color-primary-hover: #1B64DA;
+    /* 시헌테크 브랜드용 파란 글씨톤 */
+    --color-primary: #0064ff;           /* 강조 블루 (토스 블루) */
+    --color-primary-hover: #0056e0;     /* 토스 블루 hover */
+    --color-primary-soft: #e8f1ff;      /* 아주 연한 블루 배경 */
     --color-secondary: #4E5968;
     --color-success: #0D9488;
     --color-danger: #F04452;
     --color-warning: #F59E0B;
     
-    /* 그레이 스케일 */
-    --color-gray-50: #F9FAFB;
+    /* 브랜드 블루 팔레트 */
+    --color-text-main: #1b3d73;         /* 딥블루: 본문 */
+    --color-text-sub: #4b5b82;          /* 서브 텍스트 */
+    --color-label: #8ea1c8;             /* 보조, 라벨 */
+    
+    /* 그레이 스케일 (호환성) */
+    --color-gray-50: #f9fbff;           /* 아주 은은한 파란빛 배경 */
     --color-gray-100: #F2F4F6;
-    --color-gray-200: #E5E8EB;
+    --color-gray-200: #d7e3f7;          /* 파란빛 연한 보더 */
     --color-gray-300: #D1D6DB;
     --color-gray-400: #B0B8C1;
-    --color-gray-500: #8B95A1;
+    --color-gray-500: #8ea1c8;          /* 보조, 라벨 */
     --color-gray-600: #6B7684;
-    --color-gray-700: #4E5968;
+    --color-gray-700: #4b5b82;          /* 서브 텍스트 */
     --color-gray-800: #333D4B;
-    --color-gray-900: #191F28;
+    --color-gray-900: #1b3d73;          /* 딥블루: 본문 */
     
-    /* 텍스트 */
-    --text-primary: #191F28;
-    --text-secondary: #4E5968;
-    --text-tertiary: #8B95A1;
+    /* 텍스트 (브랜드 블루 적용) */
+    --text-primary: #1b3d73;            /* 딥블루: 본문 */
+    --text-secondary: #4b5b82;          /* 서브 텍스트 */
+    --text-tertiary: #8ea1c8;           /* 보조, 라벨 */
     
     /* 배경 */
-    --bg-page: #FFFFFF;
-    --bg-elevated: #FFFFFF;
-    --bg-input: #F9FAFB;
+    --bg-page: #f9fbff;                 /* 아주 은은한 파란빛 배경 */
+    --bg-elevated: #ffffff;             /* 카드/섹션 */
+    --bg-input: #ffffff;                /* 인풋 배경 */
     
-    /* 보더 */
-    --border-color: #E5E8EB;
+    /* 보더 (파란빛 톤) */
+    --border-color: #d7e3f7;            /* 파란빛 연한 보더 */
+    --border-color-strong: #b6c9eb;     /* 좀 더 진한 파란빛 보더 */
     --border-radius: 12px;
     --border-radius-sm: 8px;
     
     /* 그림자 */
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
-    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
-    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12);
+    --shadow-sm: 0 1px 2px rgba(0, 40, 120, 0.04);
+    --shadow-md: 0 6px 18px rgba(0, 40, 120, 0.06);
+    --shadow-lg: 0 10px 30px rgba(0, 40, 120, 0.12);
+    --shadow-soft: 0 10px 24px rgba(0, 40, 120, 0.08);
     
     /* 타이포그래피 */
     --font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
@@ -63,9 +71,9 @@
 }
 
 body {
-    font-family: var(--font-family);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", system-ui, sans-serif;
     background-color: var(--bg-page);
-    color: var(--text-primary);
+    color: var(--color-text-main);
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -97,7 +105,7 @@ body {
 .logo {
     font-size: var(--font-size-xl);
     font-weight: 700;
-    color: var(--text-primary);
+    color: var(--color-text-main);
 }
 
 .nav {
@@ -106,7 +114,7 @@ body {
 }
 
 .nav-link {
-    color: var(--text-secondary);
+    color: var(--color-text-sub);
     text-decoration: none;
     font-size: var(--font-size-sm);
     font-weight: 500;
@@ -141,12 +149,12 @@ body {
     font-size: var(--font-size-3xl);
     font-weight: 700;
     margin-bottom: 12px;
-    color: var(--text-primary);
+    color: var(--color-text-main);
 }
 
 .section-description {
     font-size: var(--font-size-base);
-    color: var(--text-secondary);
+    color: var(--color-text-sub);
 }
 
 .search-bar {
@@ -164,12 +172,13 @@ body {
     font-size: var(--font-size-base);
     background-color: var(--bg-input);
     transition: all 0.2s;
+    color: var(--color-text-main);
 }
 
 .search-input:focus {
     outline: none;
     border-color: var(--color-primary);
-    background-color: var(--bg-elevated);
+    box-shadow: 0 0 0 1px rgba(0, 100, 255, 0.28);
 }
 
 /* Category Filter */
@@ -183,8 +192,8 @@ body {
 .category-btn {
     padding: 10px 20px;
     border: 1px solid var(--border-color);
-    background-color: var(--bg-elevated);
-    color: var(--text-secondary);
+    background-color: #fff;
+    color: var(--color-text-sub);
     border-radius: 100px;
     font-size: var(--font-size-sm);
     font-weight: 500;
@@ -193,13 +202,15 @@ body {
 }
 
 .category-btn:hover {
-    background-color: var(--color-gray-50);
+    background-color: var(--color-primary-soft);
+    border-color: #b6d3ff;
+    color: var(--color-primary);
 }
 
 .category-btn.active {
-    background-color: var(--color-primary);
-    color: white;
-    border-color: var(--color-primary);
+    background-color: var(--color-primary-soft);
+    color: var(--color-primary);
+    border-color: #b6d3ff;
 }
 
 /* Manual List */
@@ -217,11 +228,12 @@ body {
     padding: 24px;
     cursor: pointer;
     transition: all 0.2s;
+    box-shadow: var(--shadow-md);
 }
 
 .manual-card:hover {
-    border-color: var(--color-primary);
-    box-shadow: var(--shadow-md);
+    border-color: var(--border-color-strong);
+    box-shadow: var(--shadow-lg);
     transform: translateY(-2px);
 }
 
@@ -235,7 +247,7 @@ body {
 .manual-card-title {
     font-size: var(--font-size-lg);
     font-weight: 600;
-    color: var(--text-primary);
+    color: var(--color-primary);
     line-height: 1.4;
 }
 
@@ -243,7 +255,7 @@ body {
     display: inline-block;
     padding: 4px 12px;
     background-color: var(--color-gray-100);
-    color: var(--text-secondary);
+    color: var(--color-text-sub);
     border-radius: 100px;
     font-size: var(--font-size-xs);
     font-weight: 500;
@@ -251,7 +263,7 @@ body {
 }
 
 .manual-card-preview {
-    color: var(--text-secondary);
+    color: var(--color-text-sub);
     font-size: var(--font-size-sm);
     line-height: 1.6;
     margin-bottom: 12px;
@@ -266,7 +278,7 @@ body {
     justify-content: space-between;
     align-items: center;
     font-size: var(--font-size-xs);
-    color: var(--text-tertiary);
+    color: var(--color-label);
 }
 
 .manual-tags {
@@ -278,7 +290,7 @@ body {
 .tag {
     padding: 3px 8px;
     background-color: var(--color-gray-50);
-    color: var(--text-tertiary);
+    color: var(--color-label);
     border-radius: 4px;
     font-size: var(--font-size-xs);
 }
@@ -306,7 +318,7 @@ body {
 
 .btn-secondary {
     background-color: var(--color-gray-100);
-    color: var(--text-secondary);
+    color: var(--color-text-sub);
 }
 
 .btn-secondary:hover {
@@ -339,7 +351,7 @@ body {
     padding: 8px 14px;
     border: 1px solid var(--border-color);
     background-color: var(--bg-elevated);
-    color: var(--text-secondary);
+    color: var(--color-text-sub);
     border-radius: var(--border-radius-sm);
     font-size: var(--font-size-sm);
     cursor: pointer;
@@ -413,14 +425,14 @@ body {
 .modal-title {
     font-size: var(--font-size-2xl);
     font-weight: 700;
-    color: var(--text-primary);
+    color: var(--color-text-main);
 }
 
 .modal-close {
     background: none;
     border: none;
     font-size: 28px;
-    color: var(--text-tertiary);
+    color: var(--color-label);
     cursor: pointer;
     line-height: 1;
     padding: 0;
@@ -435,7 +447,7 @@ body {
 
 .modal-close:hover {
     background-color: var(--color-gray-100);
-    color: var(--text-primary);
+    color: var(--color-text-main);
 }
 
 .modal-body {
@@ -450,12 +462,12 @@ body {
 }
 
 .modal-views {
-    color: var(--text-tertiary);
+    color: var(--color-label);
     font-size: var(--font-size-sm);
 }
 
 .modal-text {
-    color: var(--text-primary);
+    color: var(--color-text-main);
     font-size: var(--font-size-base);
     line-height: 1.8;
     white-space: pre-wrap;
@@ -463,7 +475,7 @@ body {
 }
 
 .modal-description {
-    color: var(--text-secondary);
+    color: var(--color-text-sub);
     font-size: var(--font-size-sm);
     line-height: 1.6;
 }
@@ -489,14 +501,14 @@ body {
 }
 
 .empty-message {
-    color: var(--text-tertiary);
+    color: var(--color-label);
     font-size: var(--font-size-base);
 }
 
 .loading-state {
     text-align: center;
     padding: 80px 20px;
-    color: var(--text-tertiary);
+    color: var(--color-label);
 }
 
 /* Admin Page */
@@ -532,7 +544,7 @@ body {
     margin-bottom: 8px;
     font-size: var(--font-size-sm);
     font-weight: 600;
-    color: var(--text-primary);
+    color: var(--color-text-main);
 }
 
 .form-input,
@@ -546,6 +558,7 @@ body {
     font-family: var(--font-family);
     background-color: var(--bg-input);
     transition: all 0.2s;
+    color: var(--color-text-main);
 }
 
 .form-input:focus,
@@ -553,7 +566,7 @@ body {
 .form-textarea:focus {
     outline: none;
     border-color: var(--color-primary);
-    background-color: var(--bg-elevated);
+    box-shadow: 0 0 0 1px rgba(0, 100, 255, 0.28);
 }
 
 .form-textarea {
@@ -575,7 +588,7 @@ body {
     gap: 8px;
     cursor: pointer;
     font-size: var(--font-size-base);
-    color: var(--text-primary);
+    color: var(--color-text-main);
 }
 
 .checkbox-label input[type="checkbox"] {
@@ -606,7 +619,7 @@ body {
     text-align: left;
     font-size: var(--font-size-sm);
     font-weight: 600;
-    color: var(--text-secondary);
+    color: var(--color-text-sub);
     border-bottom: 1px solid var(--border-color);
 }
 
@@ -614,7 +627,7 @@ body {
     padding: 16px;
     border-bottom: 1px solid var(--border-color);
     font-size: var(--font-size-sm);
-    color: var(--text-primary);
+    color: var(--color-text-main);
 }
 
 .admin-table tbody tr:hover {
@@ -640,7 +653,7 @@ body {
 
 .status-draft {
     background-color: var(--color-gray-100);
-    color: var(--text-tertiary);
+    color: var(--color-label);
 }
 
 .table-actions {
