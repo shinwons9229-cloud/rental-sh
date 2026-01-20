@@ -716,3 +716,98 @@ body {
         width: 100%;
     }
 }
+
+/* Admin Tabs */
+.admin-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.tab-btn {
+    padding: 12px 24px;
+    border: none;
+    background: none;
+    color: var(--color-text-sub);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s;
+    border-bottom: 3px solid transparent;
+}
+
+.tab-btn:hover {
+    color: var(--color-primary);
+}
+
+.tab-btn.active {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Quote Detail Styles */
+.quote-detail-section {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.quote-detail-section:last-child {
+    border-bottom: none;
+}
+
+.quote-detail-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    font-size: var(--font-size-sm);
+}
+
+.quote-detail-row strong {
+    min-width: 80px;
+    color: var(--color-text-sub);
+}
+
+.quote-detail-row span {
+    color: var(--color-text-main);
+}
+
+.quote-detail-content {
+    margin-top: 12px;
+    padding: 16px;
+    background-color: var(--color-gray-50);
+    border-radius: var(--border-radius-sm);
+    line-height: 1.8;
+    white-space: pre-wrap;
+    color: var(--color-text-main);
+}
+
+.modal-large {
+    max-width: 900px;
+}
+
+.status-waiting {
+    background-color: #FEF3C7;
+    color: #92400E;
+}
+
+.status-completed {
+    background-color: #D1FAE5;
+    color: #065F46;
+}
+
+.admin-filter {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}

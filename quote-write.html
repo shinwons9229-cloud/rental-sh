@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>견적문의 작성 | 시헌테크</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --color-primary: #0064ff;
+      --color-primary-hover: #0056e0;
+      --color-primary-soft: #e8f1ff;
+      --color-bg: #f9fbff;
+      --color-surface: #ffffff;
+      --color-border: #d7e3f7;
+      --color-border-strong: #b6c9eb;
+      --color-text-main: #1b3d73;
+      --color-text-sub: #4b5b82;
+      --color-label: #8ea1c8;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --max-width: 1140px;
+      --shadow-soft: 0 10px 24px rgba(0, 40, 120, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      background-color: var(--color-bg);
+      color: var(--color-text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* 헤더 */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: rgba(255, 255, 255, 0.8);
+      backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .header-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+    }
+
+    .logo-image {
+      height: 32px;
+      width: auto;
+    }
+
+    .logo-divider {
+      width: 1px;
+      height: 24px;
+      background-color: var(--color-border);
+    }
+
+    .logo-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-text-sub);
+    }
+
+    /* 네비게이션 드롭다운 */
+    .nav-item {
+      position: relative;
+      display: inline-block;
+    }
+
+    .nav-link {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--color-text-sub);
+      text-decoration: none;
+      transition: color 0.2s;
+      cursor: pointer;
+      padding: 20px 0;
+      display: block;
+    }
+
+    .nav-link:hover {
+      color: var(--color-primary);
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: white;
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 40, 120, 0.15);
+      min-width: 240px;
+      padding: 12px 0;
+      margin-top: 0;
+      z-index: 1000;
+    }
+
+    .nav-item:hover .dropdown-menu {
+      display: block;
+    }
+
+    .dropdown-menu::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: -20px;
+      right: -20px;
+      height: 8px;
+      background: transparent;
+    }
+
+    .dropdown-menu::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -20px;
+      bottom: 0;
+      width: 20px;
+      background: transparent;
+    }
+
+    .dropdown-item {
+      display: block;
+      padding: 12px 24px;
+      color: var(--color-text-main);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .dropdown-item:hover {
+      background: var(--color-primary-soft);
+      color: var(--color-primary);
+    }
+
+    /* 메인 */
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 24px;
+      min-height: calc(100vh - 200px);
+    }
+
+    .page-header {
+      margin-bottom: 48px;
+    }
+
+    .page-title {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: 12px;
+      color: var(--color-text-main);
+    }
+
+    .page-desc {
+      font-size: 16px;
+      color: var(--color-text-sub);
+    }
+
+    /* 폼 */
+    .form-section {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .form-group {
+      margin-bottom: 28px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-text-main);
+      margin-bottom: 10px;
+    }
+
+    .required {
+      color: #ef4444;
+      margin-left: 4px;
+    }
+
+    .form-input,
+    .form-textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-size: 15px;
+      font-family: inherit;
+      color: var(--color-text-main);
+      transition: all 0.2s;
+      background: white;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-soft);
+    }
+
+    .form-textarea {
+      min-height: 200px;
+      resize: vertical;
+    }
+
+    .form-hint {
+      font-size: 13px;
+      color: var(--color-label);
+      margin-top: 8px;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 40px;
+    }
+
+    .btn {
+      padding: 14px 32px;
+      border-radius: var(--radius-md);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      flex: 1;
+    }
+
+    .btn-primary {
+      background: var(--color-primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--color-primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 100, 255, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--color-border);
+      color: var(--color-text-sub);
+    }
+
+    .btn-secondary:hover {
+      background: var(--color-border-strong);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* 푸터 */
+    footer {
+      border-top: 1px solid var(--color-border);
+      background: var(--color-surface);
+      margin-top: 80px;
+    }
+
+    .footer-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 40px 24px;
+      text-align: center;
+      font-size: 15px;
+      color: var(--color-label);
+    }
+
+    /* 반응형 */
+    @media (max-width: 768px) {
+      .header-inner {
+        padding: 0 16px;
+        height: auto;
+        min-height: 64px;
+        flex-wrap: wrap;
+      }
+
+      .header-inner > div {
+        gap: 16px !important;
+      }
+
+      .logo-container {
+        gap: 12px;
+      }
+
+      .logo-image {
+        height: 24px;
+      }
+
+      .logo-text {
+        font-size: 15px;
+      }
+
+      .nav-link {
+        font-size: 15px;
+        padding: 12px 0;
+      }
+
+      .page-title {
+        font-size: 28px;
+      }
+
+      .form-section {
+        padding: 24px;
+      }
+
+      .form-actions {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div style="display: flex; align-items: center; gap: 32px;">
+        <div class="logo-container" onclick="location.href='index.html'">
+          <img src="https://www.genspark.ai/api/files/s/nZUGwpE8" alt="시헌테크" class="logo-image">
+          <div class="logo-divider"></div>
+          <div class="logo-text">견적문의</div>
+        </div>
+        <a href="index.html" class="nav-link">A/S 매뉴얼</a>
+        <a href="https://wellyfit.co.kr/company/" target="_blank" class="nav-link">회사소개</a>
+        <div class="nav-item">
+          <span class="nav-link">제품</span>
+          <div class="dropdown-menu">
+            <a href="https://wellyfit.co.kr/sh-3025a/" target="_blank" class="dropdown-item">공기청정기 SH-3025A/AN</a>
+            <a href="https://wellyfit.co.kr/sh-3522a/" target="_blank" class="dropdown-item">공기청정기 SH-3522A/AN</a>
+            <a href="https://wellyfit.co.kr/sterilizer/" target="_blank" class="dropdown-item">공기청정살균기</a>
+            <a href="https://wellyfit.co.kr/circulator/" target="_blank" class="dropdown-item">공기순환기</a>
+          </div>
+        </div>
+        <a href="quote-list.html" class="nav-link">견적문의</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-header">
+      <h1 class="page-title">견적문의 작성</h1>
+      <p class="page-desc">제품 견적이나 문의사항을 남겨주시면 빠르게 답변드리겠습니다.</p>
+    </div>
+
+    <div class="form-section">
+      <form id="quoteForm">
+        <div class="form-group">
+          <label class="form-label">제목<span class="required">*</span></label>
+          <input type="text" id="title" class="form-input" placeholder="문의 제목을 입력하세요" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">작성자<span class="required">*</span></label>
+          <input type="text" id="authorName" class="form-input" placeholder="이름을 입력하세요" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">연락처<span class="required">*</span></label>
+          <input type="text" id="contact" class="form-input" placeholder="전화번호 또는 이메일을 입력하세요" required>
+          <div class="form-hint">답변을 받으실 전화번호 또는 이메일 주소를 입력해주세요.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">수요처명</label>
+          <input type="text" id="company" class="form-input" placeholder="수요처명을 입력하세요 (선택)">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">문의내용<span class="required">*</span></label>
+          <textarea id="content" class="form-textarea" placeholder="견적 또는 문의하실 내용을 상세히 작성해주세요." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">파일 첨부</label>
+          <input type="file" id="attachments" class="form-input" multiple accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.zip">
+          <div class="form-hint">최대 10MB, 최대 5개까지 첨부 가능 (이미지, PDF, 문서, 압축파일)</div>
+          <div id="filePreview" style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">비밀번호<span class="required">*</span></label>
+          <input type="password" id="password" class="form-input" placeholder="게시글 확인용 비밀번호 (4자리 이상)" minlength="4" required>
+          <div class="form-hint">작성한 글을 확인하거나 수정할 때 필요합니다. 꼭 기억해주세요!</div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" onclick="history.back()">취소</button>
+          <button type="submit" class="btn btn-primary" id="submitBtn">문의하기</button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div style="margin-bottom: 12px; font-weight: 600; color: var(--color-text-main);">주식회사 시헌테크</div>
+      <div style="font-size: 14px; line-height: 1.8;">
+        대표자 : 유재천 | 사업자등록번호 : 811-81-02009<br>
+        사업장주소 : 경기도 파주시 검산로 301-50
+      </div>
+      <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--color-border);">
+        Copyright © 시헌테크 All Rights Reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Supabase 라이브러리 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <!-- 설정 파일 -->
+  <script src="js/config.js"></script>
+
+  <script>
+    // 파일 미리보기
+    document.getElementById('attachments').addEventListener('change', function(e) {
+      const files = Array.from(e.target.files);
+      const preview = document.getElementById('filePreview');
+      
+      preview.innerHTML = files.map(file => {
+        const size = (file.size / 1024).toFixed(1);
+        return `
+          <div style="padding: 8px 12px; background: var(--color-primary-soft); border-radius: 8px; font-size: 13px; color: var(--color-text-main);">
+            📎 ${file.name} (${size}KB)
+          </div>
+        `;
+      }).join('');
+    });
+
+    // 간단한 해시 함수 (비밀번호 보안)
+    async function hashPassword(password) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(password);
+      const hash = await crypto.subtle.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hash));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // 파일 업로드 (Supabase Storage)
+    async function uploadFiles(files) {
+      const uploadedUrls = [];
+      
+      for (const file of files) {
+        try {
+          // 파일 크기 체크 (10MB)
+          if (file.size > 10 * 1024 * 1024) {
+            alert(`${file.name}은(는) 10MB를 초과하여 업로드할 수 없습니다.`);
+            continue;
+          }
+
+          const timestamp = Date.now();
+          const random = Math.random().toString(36).substring(2, 15);
+          const ext = file.name.split('.').pop();
+          const fileName = `quote_${timestamp}_${random}.${ext}`;
+          
+          const { data, error } = await supabase.storage
+            .from('manual-media')
+            .upload(fileName, file, {
+              cacheControl: '3600',
+              upsert: false
+            });
+          
+          if (error) {
+            throw new Error(`파일 업로드 실패: ${error.message}`);
+          }
+          
+          const { data: publicData } = supabase.storage
+            .from('manual-media')
+            .getPublicUrl(fileName);
+          
+          if (publicData.publicUrl) {
+            uploadedUrls.push(publicData.publicUrl);
+          }
+          
+        } catch (error) {
+          console.error('파일 업로드 오류:', file.name, error);
+          alert(`${file.name} 업로드 실패: ${error.message}`);
+        }
+      }
+      
+      return uploadedUrls;
+    }
+
+    // 폼 제출
+    document.getElementById('quoteForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const submitBtn = document.getElementById('submitBtn');
+      const originalText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = '등록 중...';
+
+      try {
+        // 파일 업로드
+        const fileInput = document.getElementById('attachments');
+        const files = Array.from(fileInput.files);
+        
+        let attachmentUrls = [];
+        if (files.length > 0) {
+          if (files.length > 5) {
+            alert('파일은 최대 5개까지 첨부 가능합니다.');
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+            return;
+          }
+          
+          submitBtn.textContent = '파일 업로드 중...';
+          attachmentUrls = await uploadFiles(files);
+        }
+
+        submitBtn.textContent = '저장 중...';
+
+        // 비밀번호 해시화
+        const password = document.getElementById('password').value;
+        const hashedPassword = await hashPassword(password);
+
+        // 데이터 구성
+        const formData = {
+          title: document.getElementById('title').value.trim(),
+          author_name: document.getElementById('authorName').value.trim(),
+          contact: document.getElementById('contact').value.trim(),
+          customer_name: document.getElementById('company').value.trim() || null,
+          content: document.getElementById('content').value.trim(),
+          password: hashedPassword,
+          status: '대기중',
+          admin_reply: null,
+          attachments: attachmentUrls.length > 0 ? attachmentUrls.join(',') : null
+        };
+
+        // RESTful API를 사용하여 데이터 등록
+        const response = await fetch('tables/quotes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+
+        if (!response.ok) {
+          throw new Error('등록에 실패했습니다.');
+        }
+
+        const result = await response.json();
+
+        alert('견적문의가 등록되었습니다.\n빠른 시일 내에 답변드리겠습니다.');
+        location.href = 'quote-list.html';
+
+      } catch (error) {
+        console.error('등록 오류:', error);
+        alert('오류가 발생했습니다: ' + error.message);
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }
+    });
+  </script>
+</body>
+</html>

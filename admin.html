@@ -35,6 +35,14 @@
     <!-- 메인 컨텐츠 -->
     <main class="main admin-main">
         <div class="container">
+            <!-- 탭 메뉴 -->
+            <div class="admin-tabs">
+                <button class="tab-btn active" onclick="switchTab('manuals')">매뉴얼 관리</button>
+                <button class="tab-btn" onclick="switchTab('quotes')">견적문의 관리</button>
+            </div>
+
+            <!-- 매뉴얼 관리 탭 -->
+            <div id="manualsTab" class="tab-content active">
             <!-- 새 매뉴얼 작성 섹션 -->
             <section class="admin-section">
                 <div class="section-header">
@@ -56,11 +64,25 @@
 
                     <div class="form-group">
                         <label for="category" class="form-label">카테고리</label>
-                        <select id="category" class="form-select" required>
+                        <select id="category" class="form-select" required onchange="updateManufacturerOptions()">
                             <option value="">카테고리 선택</option>
                             <option value="잉크젯 프린터">잉크젯 프린터</option>
                             <option value="레이저 프린터">레이저 프린터</option>
                             <option value="공기청정기">공기청정기</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="manufacturer" class="form-label">제조사</label>
+                        <select id="manufacturer" class="form-select" required onchange="updateModelOptions()">
+                            <option value="">먼저 카테고리를 선택하세요</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="model" class="form-label">모델</label>
+                        <select id="model" class="form-select" required>
+                            <option value="">먼저 제조사를 선택하세요</option>
                         </select>
                     </div>
 
@@ -143,11 +165,13 @@
                     <table class="admin-table">
                         <thead>
                             <tr>
-                                <th style="width: 40%;">제목</th>
-                                <th style="width: 15%;">카테고리</th>
-                                <th style="width: 10%;">조회수</th>
-                                <th style="width: 10%;">공개여부</th>
-                                <th style="width: 15%;">작성일</th>
+                                <th style="width: 30%;">제목</th>
+                                <th style="width: 12%;">카테고리</th>
+                                <th style="width: 10%;">제조사</th>
+                                <th style="width: 10%;">모델</th>
+                                <th style="width: 8%;">조회수</th>
+                                <th style="width: 8%;">공개여부</th>
+                                <th style="width: 12%;">작성일</th>
                                 <th style="width: 10%;">관리</th>
                             </tr>
                         </thead>
@@ -170,6 +194,59 @@
                     <!-- JavaScript로 동적 생성 -->
                 </div>
             </section>
+            </div>
+            <!-- 매뉴얼 관리 탭 끝 -->
+
+            <!-- 견적문의 관리 탭 -->
+            <div id="quotesTab" class="tab-content">
+            <section class="admin-section">
+                <div class="section-header">
+                    <h2 class="section-title">견적문의 관리</h2>
+                    <div class="admin-filter">
+                        <select id="quoteStatusFilter" class="form-select-sm">
+                            <option value="all">전체 상태</option>
+                            <option value="대기중">대기중</option>
+                            <option value="답변완료">답변완료</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="admin-table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">제목</th>
+                                <th style="width: 10%;">작성자</th>
+                                <th style="width: 15%;">연락처</th>
+                                <th style="width: 12%;">수요처명</th>
+                                <th style="width: 10%;">상태</th>
+                                <th style="width: 13%;">작성일</th>
+                                <th style="width: 15%;">관리</th>
+                            </tr>
+                        </thead>
+                        <tbody id="quoteList">
+                            <!-- JavaScript로 동적 생성 -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 로딩 -->
+                <div id="quoteLoadingState" class="loading-state">
+                    로딩 중...
+                </div>
+
+                <!-- 빈 상태 -->
+                <div id="quoteEmptyState" class="empty-state" style="display: none;">
+                    등록된 견적문의가 없습니다.
+                </div>
+
+                <!-- 페이지네이션 -->
+                <div id="quotePagination" class="pagination">
+                    <!-- JavaScript로 동적 생성 -->
+                </div>
+            </section>
+            </div>
+            <!-- 견적문의 관리 탭 끝 -->
         </div>
     </main>
 
@@ -191,6 +268,97 @@
         </div>
     </div>
 
+    <!-- 견적문의 상세/답변 모달 -->
+    <div id="quoteModal" class="modal">
+        <div class="modal-overlay" onclick="closeQuoteModal()"></div>
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3 class="modal-title">견적문의 상세</h3>
+                <button class="modal-close" onclick="closeQuoteModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="quote-detail-section">
+                    <div class="quote-detail-row">
+                        <strong>제목:</strong>
+                        <span id="quoteDetailTitle"></span>
+                    </div>
+                    <div class="quote-detail-row">
+                        <strong>작성자:</strong>
+                        <span id="quoteDetailAuthor"></span>
+                    </div>
+                    <div class="quote-detail-row">
+                        <strong>연락처:</strong>
+                        <span id="quoteDetailContact"></span>
+                    </div>
+                    <div class="quote-detail-row" id="quoteDetailCompanyRow" style="display: none;">
+                        <strong>수요처명:</strong>
+                        <span id="quoteDetailCompany"></span>
+                    </div>
+                    <div class="quote-detail-row">
+                        <strong>작성일:</strong>
+                        <span id="quoteDetailDate"></span>
+                    </div>
+                    <div class="quote-detail-row">
+                        <strong>상태:</strong>
+                        <span id="quoteDetailStatus" class="status-badge"></span>
+                    </div>
+                </div>
+                
+                <div class="quote-detail-section">
+                    <strong>문의내용:</strong>
+                    <div class="quote-detail-content" id="quoteDetailContent"></div>
+                </div>
+
+                <!-- 고객 첨부파일 -->
+                <div class="quote-detail-section" id="quoteAttachmentSection" style="display: none;">
+                    <strong>고객 첨부파일:</strong>
+                    <div id="quoteAttachmentList" style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;"></div>
+                </div>
+
+                <div class="quote-detail-section">
+                    <label for="adminReply" class="form-label"><strong>관리자 답변:</strong></label>
+                    <textarea 
+                        id="adminReply" 
+                        class="form-textarea" 
+                        rows="6"
+                        placeholder="답변 내용을 입력하세요"></textarea>
+                </div>
+
+                <!-- 관리자 첨부파일 -->
+                <div class="quote-detail-section">
+                    <label for="adminAttachments" class="form-label"><strong>답변 첨부파일:</strong></label>
+                    <input type="file" id="adminAttachments" class="form-input" multiple accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.zip" style="margin-bottom: 8px;">
+                    <div style="font-size: 13px; color: var(--color-label); margin-bottom: 12px;">최대 10MB, 최대 5개까지 첨부 가능</div>
+                    <div id="adminFilePreview" style="display: flex; gap: 8px; flex-wrap: wrap;"></div>
+                    <!-- 기존 첨부파일 표시 -->
+                    <div id="existingAdminAttachments" style="margin-top: 12px;"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="saveQuoteReply()">답변 저장</button>
+                <button class="btn btn-secondary" onclick="closeQuoteModal()">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 견적문의 삭제 확인 모달 -->
+    <div id="deleteQuoteModal" class="modal">
+        <div class="modal-overlay" onclick="closeDeleteQuoteModal()"></div>
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h3 class="modal-title">견적문의 삭제</h3>
+            </div>
+            <div class="modal-body">
+                <p class="modal-text">정말 삭제하시겠습니까?</p>
+                <p class="modal-description">삭제된 견적문의는 복구할 수 없습니다.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" onclick="confirmDeleteQuote()">삭제</button>
+                <button class="btn btn-secondary" onclick="closeDeleteQuoteModal()">취소</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Supabase 라이브러리 -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
@@ -199,5 +367,6 @@
     
     <!-- 관리자 스크립트 -->
     <script src="js/admin-supabase.js"></script>
+    <script src="js/admin-quotes.js"></script>
 </body>
 </html>

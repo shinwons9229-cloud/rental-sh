@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>제조사 선택 | 시헌테크 A/S 매뉴얼</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --color-primary: #0064ff;
+      --color-primary-hover: #0056e0;
+      --color-primary-soft: #e8f1ff;
+      --color-bg: #f9fbff;
+      --color-surface: #ffffff;
+      --color-border: #d7e3f7;
+      --color-border-strong: #b6c9eb;
+      --color-text-main: #1b3d73;
+      --color-text-sub: #4b5b82;
+      --color-label: #8ea1c8;
+      --color-inkjet: #00C896;
+      --color-laser: #0064ff;
+      --color-cleaner: #A259FF;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --max-width: 1140px;
+      --shadow-soft: 0 10px 24px rgba(0, 40, 120, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      background-color: var(--color-bg);
+      color: var(--color-text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* 헤더 */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: rgba(255, 255, 255, 0.8);
+      backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .header-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+    }
+
+    .logo-image {
+      height: 32px;
+      width: auto;
+    }
+
+    .logo-divider {
+      width: 1px;
+      height: 24px;
+      background-color: var(--color-border);
+    }
+
+    .logo-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-text-sub);
+    }
+
+    .nav-button {
+      padding: 8px 20px;
+      border-radius: 8px;
+      border: none;
+      background-color: var(--color-text-main);
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .nav-button:hover {
+      transform: scale(1.05);
+    }
+
+    /* 네비게이션 드롭다운 */
+    .nav-item {
+      position: relative;
+      display: inline-block;
+    }
+
+    .nav-link {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-text-sub);
+      text-decoration: none;
+      transition: color 0.2s;
+      cursor: pointer;
+      padding: 20px 0;
+      display: block;
+    }
+
+    .nav-link:hover {
+      color: var(--color-primary);
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: white;
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 40, 120, 0.15);
+      min-width: 240px;
+      padding: 12px 0;
+      margin-top: 0;
+      z-index: 1000;
+    }
+
+    .nav-item:hover .dropdown-menu {
+      display: block;
+    }
+
+    .dropdown-menu::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: -20px;
+      right: -20px;
+      height: 8px;
+      background: transparent;
+    }
+
+    .dropdown-menu::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -20px;
+      bottom: 0;
+      width: 20px;
+      background: transparent;
+    }
+
+    .dropdown-item {
+      display: block;
+      padding: 12px 24px;
+      color: var(--color-text-main);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .dropdown-item:hover {
+      background: var(--color-primary-soft);
+      color: var(--color-primary);
+    }
+
+    /* 메인 */
+    main {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 24px;
+      min-height: calc(100vh - 200px);
+    }
+
+    /* 브레드크럼 */
+    .breadcrumb {
+      padding: 32px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      color: var(--color-text-sub);
+    }
+
+    .breadcrumb a {
+      color: var(--color-primary);
+      font-weight: 600;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
+    .breadcrumb-separator {
+      color: var(--color-label);
+    }
+
+    /* 섹션 */
+    .section-header {
+      padding: 24px 0 48px;
+    }
+
+    .section-title {
+      font-size: 42px;
+      font-weight: 700;
+      letter-spacing: -1.5px;
+      margin-bottom: 12px;
+      color: var(--color-text-main);
+    }
+
+    .section-desc {
+      font-size: 18px;
+      color: var(--color-text-sub);
+    }
+
+    /* 제조사 그리드 */
+    .manufacturer-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 80px;
+    }
+
+    .manufacturer-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      padding: 48px 32px;
+      border: 2px solid var(--color-border);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .manufacturer-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--card-color);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .manufacturer-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-soft);
+      border-color: var(--card-color);
+    }
+
+    .manufacturer-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .manufacturer-name {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--color-text-main);
+    }
+
+    .manufacturer-count {
+      font-size: 16px;
+      color: var(--color-text-sub);
+      font-weight: 500;
+    }
+
+    .manufacturer-badge {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 6px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      background: var(--badge-bg);
+      color: var(--badge-color);
+    }
+
+    /* 카테고리별 색상 */
+    .cat-inkjet {
+      --card-color: #00C896;
+      --badge-bg: #F0FDF9;
+      --badge-color: #00C896;
+    }
+
+    .cat-laser {
+      --card-color: #0064ff;
+      --badge-bg: #e8f1ff;
+      --badge-color: #0064ff;
+    }
+
+    .cat-cleaner {
+      --card-color: #A259FF;
+      --badge-bg: #F9F5FF;
+      --badge-color: #A259FF;
+    }
+
+    /* 로딩 상태 */
+    .loading-state {
+      text-align: center;
+      padding: 100px 20px;
+      color: var(--color-label);
+      font-size: 17px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* 푸터 */
+    footer {
+      border-top: 1px solid var(--color-border);
+      background: var(--color-surface);
+      margin-top: 120px;
+    }
+
+    .footer-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 40px 24px;
+      text-align: center;
+      font-size: 15px;
+      color: var(--color-label);
+    }
+
+    footer a {
+      color: var(--color-primary);
+      font-weight: 600;
+    }
+
+    /* 반응형 */
+    @media (max-width: 1024px) {
+      .manufacturer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header-inner {
+        padding: 0 16px;
+        height: auto;
+        min-height: 64px;
+        flex-wrap: wrap;
+      }
+
+      .header-inner > div {
+        gap: 16px !important;
+        flex-wrap: wrap;
+      }
+
+      .logo-container {
+        gap: 12px;
+      }
+
+      .logo-image {
+        height: 24px;
+      }
+
+      .logo-text {
+        font-size: 15px;
+      }
+
+      .nav-link {
+        font-size: 15px;
+        padding: 12px 0;
+      }
+
+      .dropdown-menu {
+        min-width: 200px;
+        font-size: 14px;
+      }
+
+      .dropdown-item {
+        padding: 10px 20px;
+        font-size: 14px;
+      }
+
+      .section-title {
+        font-size: 32px;
+      }
+
+      .manufacturer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div style="display: flex; align-items: center; gap: 32px;">
+        <div class="logo-container" onclick="location.href='index.html'">
+          <img src="https://www.genspark.ai/api/files/s/nZUGwpE8" alt="시헌테크" class="logo-image">
+          <div class="logo-divider"></div>
+          <div class="logo-text">A/S 매뉴얼</div>
+        </div>
+        <a href="https://wellyfit.co.kr/company/" target="_blank" class="nav-link">회사소개</a>
+        <div class="nav-item">
+          <span class="nav-link">제품</span>
+          <div class="dropdown-menu">
+            <a href="https://wellyfit.co.kr/sh-3025a/" target="_blank" class="dropdown-item">공기청정기 SH-3025A/AN</a>
+            <a href="https://wellyfit.co.kr/sh-3522a/" target="_blank" class="dropdown-item">공기청정기 SH-3522A/AN</a>
+            <a href="https://wellyfit.co.kr/sterilizer/" target="_blank" class="dropdown-item">공기청정살균기</a>
+            <a href="https://wellyfit.co.kr/circulator/" target="_blank" class="dropdown-item">공기순환기</a>
+          </div>
+        </div>
+        <a href="quote-list.html" class="nav-link">견적문의</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- 브레드크럼 -->
+    <nav class="breadcrumb">
+      <a href="index.html">홈</a>
+      <span class="breadcrumb-separator">›</span>
+      <span id="categoryName">카테고리</span>
+      <span class="breadcrumb-separator">›</span>
+      <span>제조사 선택</span>
+    </nav>
+
+    <!-- 섹션 헤더 -->
+    <div class="section-header">
+      <h1 class="section-title" id="pageTitle">제조사를 선택하세요</h1>
+      <p class="section-desc" id="pageDesc">원하시는 제조사를 선택하시면 해당 모델을 확인하실 수 있습니다</p>
+    </div>
+
+    <!-- 로딩 -->
+    <div id="loadingState" class="loading-state">로딩 중...</div>
+
+    <!-- 제조사 그리드 -->
+    <div id="manufacturerGrid" class="manufacturer-grid hidden"></div>
+  </main>
+
+  <footer>
+    <div class="footer-inner" style="position: relative;">
+      <div style="margin-bottom: 12px; font-weight: 600; color: var(--color-text-main);">주식회사 시헌테크</div>
+      <div style="font-size: 14px; line-height: 1.8;">
+        대표자 : 유재천 | 사업자등록번호 : 811-81-02009<br>
+        사업장주소 : 경기도 파주시 검산로 301-50
+      </div>
+      <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--color-border);">
+        Copyright © 시헌테크 All Rights Reserved.
+      </div>
+      <a href="admin.html" style="position: absolute; bottom: 0; right: 0; font-size: 12px; color: var(--color-label); text-decoration: none; opacity: 0.5; transition: opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.5'">관리자</a>
+    </div>
+  </footer>
+
+  <!-- Supabase 라이브러리 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <!-- 설정 파일 -->
+  <script src="js/config.js"></script>
+
+  <script>
+    // URL에서 카테고리 파라미터 가져오기
+    const urlParams = new URLSearchParams(window.location.search);
+    const category = urlParams.get('category');
+
+    // 제조사 데이터 정의
+    const manufacturersData = {
+      '잉크젯 프린터': [
+        { name: '캐논', models: ['GX 공통', 'GX5090시리즈', 'GX6090시리즈', 'GX7090시리즈'] },
+        { name: 'HP', models: ['HP 공통 (A4)', 'HP 공통 (A3)', 'OJ7720', 'OJ7740', 'OJ9730', 'OJ9120', 'OJ8710', 'OJ8210'] },
+        { name: '앱손', models: ['앱손 공통', 'L6270'] }
+      ],
+      '레이저 프린터': [
+        { name: '캐논', models: ['캐논 공통', 'C3725', 'C3826', 'C3926'] },
+        { name: '삼성', models: ['삼성 공통', 'X3220', 'X4300'] },
+        { name: '리코', models: ['리코 공통', 'C2010', 'C2510', 'C3510', 'IM2500', 'IM3000'] }
+      ],
+      '공기청정기': [
+        { name: '웰리핏', models: ['SH-3025', 'SH-4025'] }
+      ]
+    };
+
+    // 카테고리별 색상 클래스
+    const categoryColorClass = {
+      '잉크젯 프린터': 'cat-inkjet',
+      '레이저 프린터': 'cat-laser',
+      '공기청정기': 'cat-cleaner'
+    };
+
+    // 카테고리가 없으면 홈으로 리다이렉트
+    if (!category || !manufacturersData[category]) {
+      location.href = 'index.html';
+    }
+
+    // 페이지 초기화
+    document.getElementById('categoryName').textContent = category;
+    document.getElementById('pageTitle').textContent = `${category} 제조사 선택`;
+
+    // 제조사별 매뉴얼 개수 가져오기
+    async function loadManufacturers() {
+      try {
+        const manufacturers = manufacturersData[category];
+        const colorClass = categoryColorClass[category];
+        const grid = document.getElementById('manufacturerGrid');
+        
+        // 각 제조사별 매뉴얼 개수 조회
+        const manufacturersWithCount = await Promise.all(
+          manufacturers.map(async (mf) => {
+            const { count, error } = await supabase
+              .from('manuals')
+              .select('*', { count: 'exact', head: true })
+              .eq('category', category)
+              .eq('manufacturer', mf.name)
+              .eq('is_published', true);
+
+            return {
+              ...mf,
+              count: error ? 0 : (count || 0)
+            };
+          })
+        );
+
+        // 제조사 카드 렌더링
+        grid.innerHTML = manufacturersWithCount.map(mf => `
+          <div class="manufacturer-card ${colorClass}" onclick="goToModels('${mf.name}')">
+            <div class="manufacturer-name">${mf.name}</div>
+            <div class="manufacturer-count">${mf.count}개의 매뉴얼</div>
+            <div class="manufacturer-badge">${category}</div>
+          </div>
+        `).join('');
+
+        document.getElementById('loadingState').classList.add('hidden');
+        grid.classList.remove('hidden');
+
+      } catch (error) {
+        console.error('제조사 로딩 오류:', error);
+        document.getElementById('loadingState').innerHTML = '데이터를 불러오는데 실패했습니다.';
+      }
+    }
+
+    // 모델 페이지로 이동
+    function goToModels(manufacturer) {
+      location.href = `models.html?category=${encodeURIComponent(category)}&manufacturer=${encodeURIComponent(manufacturer)}`;
+    }
+
+    // 페이지 로드 시 실행
+    loadManufacturers();
+  </script>
+</body>
+</html>

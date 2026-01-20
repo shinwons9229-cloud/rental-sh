@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>연결 테스트 | 시헌테크 A/S 매뉴얼</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 800px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      color: #1b3d73;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      color: #6b7280;
+      margin-bottom: 30px;
+    }
+
+    .status-box {
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .status-loading {
+      background: #fef3c7;
+      color: #92400e;
+      border: 2px solid #fbbf24;
+    }
+
+    .status-success {
+      background: #d1fae5;
+      color: #065f46;
+      border: 2px solid #10b981;
+    }
+
+    .status-error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 2px solid #ef4444;
+    }
+
+    .info-section {
+      background: #f3f4f6;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 20px;
+    }
+
+    .info-title {
+      font-weight: 700;
+      color: #1b3d73;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .info-item {
+      padding: 8px 0;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .info-item:last-child {
+      border-bottom: none;
+    }
+
+    .info-label {
+      font-weight: 600;
+      color: #4b5563;
+    }
+
+    .info-value {
+      color: #1b3d73;
+      font-weight: 700;
+    }
+
+    .button {
+      background: #0064ff;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 20px;
+      width: 100%;
+    }
+
+    .button:hover {
+      background: #0056e0;
+      transform: translateY(-2px);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    pre {
+      background: #1f2937;
+      color: #10b981;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔍 시스템 연결 테스트</h1>
+    <p class="subtitle">Supabase 연결 상태 및 데이터베이스 확인</p>
+
+    <!-- 상태 표시 -->
+    <div id="statusBox" class="status-box status-loading">
+      ⏳ 연결 테스트 중...
+    </div>
+
+    <!-- 데이터베이스 정보 -->
+    <div id="infoSection" class="info-section hidden">
+      <div class="info-title">📊 데이터베이스 통계</div>
+      <div class="info-item">
+        <span class="info-label">전체 매뉴얼</span>
+        <span class="info-value" id="totalCount">-</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">잉크젯 프린터</span>
+        <span class="info-value" id="inkjetCount">-</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">레이저 프린터</span>
+        <span class="info-value" id="laserCount">-</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">공기청정기</span>
+        <span class="info-value" id="cleanerCount">-</span>
+      </div>
+    </div>
+
+    <!-- 제조사별 통계 -->
+    <div id="manufacturerSection" class="info-section hidden">
+      <div class="info-title">🏢 제조사별 데이터</div>
+      <div id="manufacturerList"></div>
+    </div>
+
+    <!-- 샘플 데이터 -->
+    <div id="sampleSection" class="info-section hidden">
+      <div class="info-title">📄 최근 매뉴얼 샘플</div>
+      <pre id="sampleData"></pre>
+    </div>
+
+    <!-- 홈으로 가기 버튼 -->
+    <button class="button" onclick="location.href='index.html'">
+      ✅ 확인 완료 - 홈으로 가기
+    </button>
+  </div>
+
+  <!-- Supabase 라이브러리 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+
+  <script>
+    const statusBox = document.getElementById('statusBox');
+    const infoSection = document.getElementById('infoSection');
+    const manufacturerSection = document.getElementById('manufacturerSection');
+    const sampleSection = document.getElementById('sampleSection');
+
+    async function testConnection() {
+      try {
+        // Supabase 초기화 확인
+        if (!window.supabase) {
+          throw new Error('Supabase 라이브러리가 로드되지 않았습니다');
+        }
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // 1. 전체 매뉴얼 개수
+        const { count: totalCount, error: totalError } = await supabase
+          .from('manuals')
+          .select('*', { count: 'exact', head: true })
+          .eq('is_published', true);
+
+        if (totalError) throw totalError;
+
+        // 2. 카테고리별 개수
+        const categories = ['잉크젯 프린터', '레이저 프린터', '공기청정기'];
+        const categoryCounts = {};
+
+        for (const cat of categories) {
+          const { count, error } = await supabase
+            .from('manuals')
+            .select('*', { count: 'exact', head: true })
+            .eq('category', cat)
+            .eq('is_published', true);
+
+          if (!error) {
+            categoryCounts[cat] = count || 0;
+          }
+        }
+
+        // 3. 제조사별 개수
+        const { data: manufacturerData, error: mfError } = await supabase
+          .from('manuals')
+          .select('manufacturer, category')
+          .eq('is_published', true);
+
+        if (mfError) throw mfError;
+
+        const manufacturerCounts = {};
+        manufacturerData.forEach(item => {
+          const key = `${item.category} - ${item.manufacturer}`;
+          manufacturerCounts[key] = (manufacturerCounts[key] || 0) + 1;
+        });
+
+        // 4. 샘플 데이터
+        const { data: sampleData, error: sampleError } = await supabase
+          .from('manuals')
+          .select('title, category, manufacturer, model')
+          .eq('is_published', true)
+          .order('created_at', { ascending: false })
+          .limit(5);
+
+        if (sampleError) throw sampleError;
+
+        // UI 업데이트
+        statusBox.className = 'status-box status-success';
+        statusBox.innerHTML = '✅ Supabase 연결 성공! 모든 데이터가 정상적으로 로드되었습니다.';
+
+        // 통계 표시
+        document.getElementById('totalCount').textContent = `${totalCount}개`;
+        document.getElementById('inkjetCount').textContent = `${categoryCounts['잉크젯 프린터']}개`;
+        document.getElementById('laserCount').textContent = `${categoryCounts['레이저 프린터']}개`;
+        document.getElementById('cleanerCount').textContent = `${categoryCounts['공기청정기']}개`;
+
+        infoSection.classList.remove('hidden');
+
+        // 제조사별 데이터
+        const mfList = document.getElementById('manufacturerList');
+        mfList.innerHTML = Object.entries(manufacturerCounts)
+          .sort((a, b) => b[1] - a[1])
+          .map(([key, count]) => `
+            <div class="info-item">
+              <span class="info-label">${key}</span>
+              <span class="info-value">${count}개</span>
+            </div>
+          `).join('');
+        manufacturerSection.classList.remove('hidden');
+
+        // 샘플 데이터
+        document.getElementById('sampleData').textContent = 
+          JSON.stringify(sampleData, null, 2);
+        sampleSection.classList.remove('hidden');
+
+      } catch (error) {
+        console.error('테스트 오류:', error);
+        statusBox.className = 'status-box status-error';
+        statusBox.innerHTML = `
+          ❌ 연결 실패<br>
+          <strong>오류:</strong> ${error.message}<br><br>
+          <strong>해결 방법:</strong><br>
+          1. js/config.js 파일의 Supabase URL과 API Key를 확인하세요<br>
+          2. Supabase 프로젝트가 활성화되어 있는지 확인하세요<br>
+          3. manuals 테이블이 생성되어 있는지 확인하세요<br>
+          4. RLS (Row Level Security) 정책이 올바르게 설정되어 있는지 확인하세요
+        `;
+      }
+    }
+
+    // 페이지 로드 시 테스트 실행
+    window.addEventListener('load', testConnection);
+  </script>
+</body>
+</html>

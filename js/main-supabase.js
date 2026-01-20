@@ -1,5 +1,8 @@
 // 시헌테크 - 사용자 페이지 JavaScript (Supabase 버전)
 
+// 전역 변수로 선언
+window.currentPage = 1;
+window.currentCategory = '잉크젯 프린터';
 let currentPage = 1;
 let currentCategory = '잉크젯 프린터';
 let currentSearch = '';
@@ -64,6 +67,7 @@ async function getManuals() {
 function handleSearch() {
     currentSearch = document.getElementById('searchInput').value.trim();
     currentPage = 1;
+    window.currentPage = 1;
     loadManuals();
 }
 
@@ -86,6 +90,14 @@ async function loadManuals() {
     const emptyState = document.getElementById('emptyState');
     const manualList = document.getElementById('manualList');
     
+    // window 변수와 동기화
+    if (window.currentCategory) {
+        currentCategory = window.currentCategory;
+    }
+    if (window.currentPage) {
+        currentPage = window.currentPage;
+    }
+    
     console.log('loadManuals 시작 - 카테고리:', currentCategory);
     
     loadingState.classList.remove('hidden');
@@ -95,6 +107,19 @@ async function loadManuals() {
     try {
         let manuals = await getManuals();
         console.log('전체 매뉴얼:', manuals.length);
+        
+        // 디버깅: 각 매뉴얼 확인
+        manuals.forEach((m, i) => {
+            console.log(`매뉴얼 ${i+1}:`, {
+                제목: m.title,
+                카테고리: m.category,
+                현재_선택_카테고리: currentCategory,
+                카테고리_일치: m.category === currentCategory,
+                is_published: m.is_published,
+                is_published_타입: typeof m.is_published,
+                공개여부: isPublished(m)
+            });
+        });
         
         let filteredManuals = manuals.filter(manual => 
             isPublished(manual) && manual.category === currentCategory
@@ -210,9 +235,43 @@ function openManualModal(manual) {
 
     if (mediaUrls.length > 0) {
         const mediaHtml = mediaUrls.map(url => {
-            // 동영상 확장자 판별
             const lower = url.toLowerCase();
-            if (lower.endsWith('.mp4') || lower.endsWith('.webm') || lower.endsWith('.ogg') || lower.includes('youtube.com') || lower.includes('youtu.be')) {
+            
+            // YouTube 링크 처리
+            if (lower.includes('youtube.com') || lower.includes('youtu.be')) {
+                // YouTube URL을 embed 형식으로 변환
+                let videoId = '';
+                
+                if (lower.includes('youtube.com/watch')) {
+                    // https://www.youtube.com/watch?v=VIDEO_ID
+                    const urlParams = new URLSearchParams(new URL(url).search);
+                    videoId = urlParams.get('v');
+                } else if (lower.includes('youtube.com/embed/')) {
+                    // https://www.youtube.com/embed/VIDEO_ID
+                    videoId = url.split('/embed/')[1].split('?')[0];
+                } else if (lower.includes('youtu.be/')) {
+                    // https://youtu.be/VIDEO_ID
+                    videoId = url.split('youtu.be/')[1].split('?')[0];
+                }
+                
+                if (videoId) {
+                    return `
+                        <iframe 
+                            width="100%" 
+                            height="400" 
+                            src="https://www.youtube.com/embed/${videoId}" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen
+                            class="modal-media-video"
+                            style="max-width: 640px; border-radius: 10px;">
+                        </iframe>
+                    `;
+                }
+            }
+            
+            // 일반 동영상 파일 (mp4, webm 등)
+            if (lower.endsWith('.mp4') || lower.endsWith('.webm') || lower.endsWith('.ogg')) {
                 return `
                     <video controls class="modal-media-video" playsinline>
                         <source src="${url}" type="video/mp4">
@@ -220,6 +279,7 @@ function openManualModal(manual) {
                     </video>
                 `;
             }
+            
             // 기본은 이미지로 처리
             return `
                 <img src="${url}" alt="매뉴얼 이미지" class="modal-media-image" loading="lazy">

@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>매뉴얼 상세 | 시헌테크 A/S 매뉴얼</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --color-primary: #0064ff;
+      --color-primary-hover: #0056e0;
+      --color-primary-soft: #e8f1ff;
+      --color-bg: #f9fbff;
+      --color-surface: #ffffff;
+      --color-border: #d7e3f7;
+      --color-border-strong: #b6c9eb;
+      --color-text-main: #1b3d73;
+      --color-text-sub: #4b5b82;
+      --color-label: #8ea1c8;
+      --color-inkjet: #00C896;
+      --color-laser: #0064ff;
+      --color-cleaner: #A259FF;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --max-width: 920px;
+      --shadow-soft: 0 10px 24px rgba(0, 40, 120, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      background-color: var(--color-bg);
+      color: var(--color-text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* 헤더 */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: rgba(255, 255, 255, 0.8);
+      backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .header-inner {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+    }
+
+    .logo-image {
+      height: 32px;
+      width: auto;
+    }
+
+    .logo-divider {
+      width: 1px;
+      height: 24px;
+      background-color: var(--color-border);
+    }
+
+    .logo-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-text-sub);
+    }
+
+    .nav-button {
+      padding: 8px 20px;
+      border-radius: 8px;
+      border: none;
+      background-color: var(--color-text-main);
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .nav-button:hover {
+      transform: scale(1.05);
+    }
+
+    /* 네비게이션 드롭다운 */
+    .nav-item {
+      position: relative;
+      display: inline-block;
+    }
+
+    .nav-link {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-text-sub);
+      text-decoration: none;
+      transition: color 0.2s;
+      cursor: pointer;
+      padding: 20px 0;
+      display: block;
+    }
+
+    .nav-link:hover {
+      color: var(--color-primary);
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: white;
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 40, 120, 0.15);
+      min-width: 240px;
+      padding: 12px 0;
+      margin-top: 0;
+      z-index: 1000;
+    }
+
+    .nav-item:hover .dropdown-menu {
+      display: block;
+    }
+
+    .dropdown-menu::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: -20px;
+      right: -20px;
+      height: 8px;
+      background: transparent;
+    }
+
+    .dropdown-menu::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -20px;
+      bottom: 0;
+      width: 20px;
+      background: transparent;
+    }
+
+    .dropdown-item {
+      display: block;
+      padding: 12px 24px;
+      color: var(--color-text-main);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .dropdown-item:hover {
+      background: var(--color-primary-soft);
+      color: var(--color-primary);
+    }
+
+    /* 메인 */
+    main {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 24px;
+      min-height: calc(100vh - 200px);
+    }
+
+    /* 브레드크럼 */
+    .breadcrumb {
+      padding: 32px 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      color: var(--color-text-sub);
+      flex-wrap: wrap;
+    }
+
+    .breadcrumb a {
+      color: var(--color-primary);
+      font-weight: 600;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
+    .breadcrumb-separator {
+      color: var(--color-label);
+    }
+
+    /* 매뉴얼 상세 */
+    .manual-detail {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border);
+      padding: 48px;
+      margin-bottom: 80px;
+    }
+
+    .manual-detail-header {
+      padding-bottom: 32px;
+      border-bottom: 2px solid var(--color-border);
+      margin-bottom: 32px;
+    }
+
+    .manual-detail-title {
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 20px;
+      color: var(--color-text-main);
+    }
+
+    .manual-detail-meta {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .manual-badge {
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      background: var(--badge-bg);
+      color: var(--badge-color);
+    }
+
+    .badge-inkjet {
+      --badge-bg: #F0FDF9;
+      --badge-color: #00C896;
+    }
+
+    .badge-laser {
+      --badge-bg: #e8f1ff;
+      --badge-color: #0064ff;
+    }
+
+    .badge-cleaner {
+      --badge-bg: #F9F5FF;
+      --badge-color: #A259FF;
+    }
+
+    .manual-info {
+      color: var(--color-label);
+      font-size: 15px;
+    }
+
+    /* 미디어 갤러리 */
+    .manual-media {
+      margin-bottom: 40px;
+    }
+
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .media-item img {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid var(--color-border);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .media-item img:hover {
+      transform: scale(1.02);
+    }
+
+    .media-item video {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid var(--color-border);
+    }
+
+    /* 매뉴얼 본문 */
+    .manual-detail-content {
+      font-size: 17px;
+      line-height: 1.8;
+      color: var(--color-text-main);
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      margin-bottom: 40px;
+    }
+
+    /* 태그 */
+    .manual-tags {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .manual-tag {
+      padding: 10px 16px;
+      background: var(--color-bg);
+      color: var(--color-text-sub);
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    /* 로딩 상태 */
+    .loading-state {
+      text-align: center;
+      padding: 100px 20px;
+      color: var(--color-label);
+      font-size: 17px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* 푸터 */
+    footer {
+      border-top: 1px solid var(--color-border);
+      background: var(--color-surface);
+      margin-top: 120px;
+    }
+
+    .footer-inner {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 40px 24px;
+      text-align: center;
+      font-size: 15px;
+      color: var(--color-label);
+    }
+
+    footer a {
+      color: var(--color-primary);
+      font-weight: 600;
+    }
+
+    /* 이미지 모달 */
+    .image-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2000;
+      background: rgba(0, 0, 0, 0.9);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .image-modal.active {
+      display: flex;
+    }
+
+    .image-modal-content {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+    }
+
+    .image-modal-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 40px;
+      color: white;
+      cursor: pointer;
+      background: none;
+      border: none;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 반응형 */
+    @media (max-width: 768px) {
+      .header-inner {
+        padding: 0 16px;
+        height: auto;
+        min-height: 64px;
+        flex-wrap: wrap;
+      }
+
+      .header-inner > div {
+        gap: 16px !important;
+        flex-wrap: wrap;
+      }
+
+      .logo-container {
+        gap: 12px;
+      }
+
+      .logo-image {
+        height: 24px;
+      }
+
+      .logo-text {
+        font-size: 15px;
+      }
+
+      .nav-link {
+        font-size: 15px;
+        padding: 12px 0;
+      }
+
+      .dropdown-menu {
+        min-width: 200px;
+        font-size: 14px;
+      }
+
+      .dropdown-item {
+        padding: 10px 20px;
+        font-size: 14px;
+      }
+
+      .manual-detail {
+        padding: 32px 24px;
+      }
+
+      .manual-detail-title {
+        font-size: 28px;
+      }
+
+      .manual-detail-content {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div style="display: flex; align-items: center; gap: 32px;">
+        <div class="logo-container" onclick="location.href='index.html'">
+          <img src="https://www.genspark.ai/api/files/s/nZUGwpE8" alt="시헌테크" class="logo-image">
+          <div class="logo-divider"></div>
+          <div class="logo-text">A/S 매뉴얼</div>
+        </div>
+        <a href="https://wellyfit.co.kr/company/" target="_blank" class="nav-link">회사소개</a>
+        <div class="nav-item">
+          <span class="nav-link">제품</span>
+          <div class="dropdown-menu">
+            <a href="https://wellyfit.co.kr/sh-3025a/" target="_blank" class="dropdown-item">공기청정기 SH-3025A/AN</a>
+            <a href="https://wellyfit.co.kr/sh-3522a/" target="_blank" class="dropdown-item">공기청정기 SH-3522A/AN</a>
+            <a href="https://wellyfit.co.kr/sterilizer/" target="_blank" class="dropdown-item">공기청정살균기</a>
+            <a href="https://wellyfit.co.kr/circulator/" target="_blank" class="dropdown-item">공기순환기</a>
+          </div>
+        </div>
+        <a href="quote-list.html" class="nav-link">견적문의</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- 로딩 -->
+    <div id="loadingState" class="loading-state">로딩 중...</div>
+
+    <!-- 매뉴얼 상세 (동적으로 생성됨) -->
+    <div id="manualDetailContainer" class="hidden"></div>
+  </main>
+
+  <footer>
+    <div class="footer-inner" style="position: relative;">
+      <div style="margin-bottom: 12px; font-weight: 600; color: var(--color-text-main);">주식회사 시헌테크</div>
+      <div style="font-size: 14px; line-height: 1.8;">
+        대표자 : 유재천 | 사업자등록번호 : 811-81-02009<br>
+        사업장주소 : 경기도 파주시 검산로 301-50
+      </div>
+      <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--color-border);">
+        Copyright © 시헌테크 All Rights Reserved.
+      </div>
+      <a href="admin.html" style="position: absolute; bottom: 0; right: 0; font-size: 12px; color: var(--color-label); text-decoration: none; opacity: 0.5; transition: opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.5'">관리자</a>
+    </div>
+  </footer>
+
+  <!-- 이미지 모달 -->
+  <div id="imageModal" class="image-modal">
+    <button class="image-modal-close" onclick="closeImageModal()">&times;</button>
+    <img id="modalImage" class="image-modal-content" src="" alt="">
+  </div>
+
+  <!-- Supabase 라이브러리 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <!-- 설정 파일 -->
+  <script src="js/config.js"></script>
+
+  <script>
+    // URL에서 매뉴얼 ID 가져오기
+    const urlParams = new URLSearchParams(window.location.search);
+    const manualId = urlParams.get('id');
+
+    if (!manualId) {
+      location.href = 'index.html';
+    }
+
+    // 카테고리별 색상 클래스
+    const categoryBadgeClass = {
+      '잉크젯 프린터': 'badge-inkjet',
+      '레이저 프린터': 'badge-laser',
+      '공기청정기': 'badge-cleaner'
+    };
+
+    // 매뉴얼 로드
+    async function loadManual() {
+      try {
+        // 매뉴얼 가져오기
+        const { data, error } = await supabase
+          .from('manuals')
+          .select('*')
+          .eq('id', manualId)
+          .eq('is_published', true)
+          .single();
+
+        if (error) throw error;
+
+        if (!data) {
+          document.getElementById('loadingState').innerHTML = '매뉴얼을 찾을 수 없습니다.';
+          return;
+        }
+
+        // 조회수 증가
+        await supabase
+          .from('manuals')
+          .update({ views: (data.views || 0) + 1 })
+          .eq('id', manualId);
+
+        // 매뉴얼 렌더링
+        renderManual(data);
+
+      } catch (error) {
+        console.error('매뉴얼 로딩 오류:', error);
+        document.getElementById('loadingState').innerHTML = '데이터를 불러오는데 실패했습니다.';
+      }
+    }
+
+    // 매뉴얼 렌더링
+    function renderManual(manual) {
+      const container = document.getElementById('manualDetailContainer');
+      const badgeClass = categoryBadgeClass[manual.category] || 'badge-laser';
+
+      // 미디어 처리
+      const mediaUrls = manual.media_urls ? manual.media_urls.split(',').map(url => url.trim()).filter(url => url) : [];
+      const mediaHtml = mediaUrls.length > 0 ? `
+        <div class="manual-media">
+          <div class="media-grid">
+            ${mediaUrls.map(url => {
+              const isVideo = url.match(/\.(mp4|webm|ogg)$/i);
+              if (isVideo) {
+                return `
+                  <div class="media-item">
+                    <video controls playsinline webkit-playsinline>
+                      <source src="${url}" type="video/mp4">
+                    </video>
+                  </div>
+                `;
+              } else {
+                return `
+                  <div class="media-item">
+                    <img src="${url}" alt="매뉴얼 이미지" onclick="openImageModal('${url}')">
+                  </div>
+                `;
+              }
+            }).join('')}
+          </div>
+        </div>
+      ` : '';
+
+      // 태그 처리
+      const tags = manual.tags ? manual.tags.split(',').map(tag => tag.trim()).filter(tag => tag) : [];
+      const tagsHtml = tags.length > 0 ? `
+        <div class="manual-tags">
+          ${tags.map(tag => `<span class="manual-tag">#${escapeHtml(tag)}</span>`).join('')}
+        </div>
+      ` : '';
+
+      // 브레드크럼 생성
+      const breadcrumbHtml = `
+        <nav class="breadcrumb">
+          <a href="index.html">홈</a>
+          <span class="breadcrumb-separator">›</span>
+          <a href="manufacturers.html?category=${encodeURIComponent(manual.category)}">${manual.category}</a>
+          ${manual.manufacturer ? `
+            <span class="breadcrumb-separator">›</span>
+            <a href="models.html?category=${encodeURIComponent(manual.category)}&manufacturer=${encodeURIComponent(manual.manufacturer)}">${manual.manufacturer}</a>
+          ` : ''}
+          ${manual.model ? `
+            <span class="breadcrumb-separator">›</span>
+            <a href="manuals.html?category=${encodeURIComponent(manual.category)}&manufacturer=${encodeURIComponent(manual.manufacturer)}&model=${encodeURIComponent(manual.model)}">${manual.model}</a>
+          ` : ''}
+          <span class="breadcrumb-separator">›</span>
+          <span>상세보기</span>
+        </nav>
+      `;
+
+      container.innerHTML = `
+        ${breadcrumbHtml}
+        <div class="manual-detail">
+          <div class="manual-detail-header">
+            <h1 class="manual-detail-title">${escapeHtml(manual.title)}</h1>
+            <div class="manual-detail-meta">
+              <span class="manual-badge ${badgeClass}">${manual.category}</span>
+              ${manual.manufacturer ? `<span class="manual-badge ${badgeClass}">${manual.manufacturer}</span>` : ''}
+              ${manual.model ? `<span class="manual-badge ${badgeClass}">${manual.model}</span>` : ''}
+              <span class="manual-info">조회수 ${manual.views || 0}</span>
+              <span class="manual-info">${formatDate(manual.created_at)}</span>
+            </div>
+          </div>
+          ${mediaHtml}
+          <div class="manual-detail-content">${escapeHtml(manual.content || '내용 없음')}</div>
+          ${tagsHtml}
+        </div>
+      `;
+
+      document.getElementById('loadingState').classList.add('hidden');
+      container.classList.remove('hidden');
+
+      // 페이지 제목 업데이트
+      document.title = `${manual.title} | 시헌테크 A/S 매뉴얼`;
+    }
+
+    // 이미지 모달 열기
+    function openImageModal(imageUrl) {
+      document.getElementById('modalImage').src = imageUrl;
+      document.getElementById('imageModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // 이미지 모달 닫기
+    function closeImageModal() {
+      document.getElementById('imageModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // HTML 이스케이프
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // 날짜 포맷
+    function formatDate(dateString) {
+      if (!dateString) return '';
+      const date = new Date(dateString);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}.${month}.${day}`;
+    }
+
+    // ESC 키로 이미지 모달 닫기
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeImageModal();
+      }
+    });
+
+    // 모달 배경 클릭 시 닫기
+    document.getElementById('imageModal').addEventListener('click', (e) => {
+      if (e.target.id === 'imageModal') {
+        closeImageModal();
+      }
+    });
+
+    // 페이지 로드 시 실행
+    loadManual();
+  </script>
+</body>
+</html>

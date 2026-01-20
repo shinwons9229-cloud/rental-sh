@@ -6,6 +6,23 @@ let editingManualId = null;
 let deleteTargetId = null;
 const limit = 10;
 
+// 제조사 및 모델 데이터
+const manufacturersData = {
+    '잉크젯 프린터': {
+        '캐논': ['GX 공통', 'GX5090시리즈', 'GX6090시리즈', 'GX7090시리즈'],
+        'HP': ['HP 공통 (A4)', 'HP 공통 (A3)', 'OJ7720', 'OJ7740', 'OJ9730', 'OJ9120', 'OJ8710', 'OJ8210'],
+        '앱손': ['앱손 공통', 'L6270']
+    },
+    '레이저 프린터': {
+        '캐논': ['캐논 공통', 'C3725', 'C3826', 'C3926'],
+        '삼성': ['삼성 공통', 'X3220', 'X4300'],
+        '리코': ['리코 공통', 'C2010', 'C2510', 'C3510', 'IM2500', 'IM3000']
+    },
+    '공기청정기': {
+        '웰리핏': ['SH-3025', 'SH-4025']
+    }
+};
+
 // 페이지 로드 시 실행
 document.addEventListener('DOMContentLoaded', function() {
     initializeAdmin();
@@ -62,6 +79,61 @@ function setupEventListeners() {
     document.getElementById('confirmDelete').addEventListener('click', confirmDelete);
     document.getElementById('cancelDelete').addEventListener('click', closeDeleteModal);
     document.querySelector('#deleteModal .modal-overlay').addEventListener('click', closeDeleteModal);
+}
+
+// 제조사 선택 옵션 업데이트
+function updateManufacturerOptions() {
+    const category = document.getElementById('category').value;
+    const manufacturerSelect = document.getElementById('manufacturer');
+    const modelSelect = document.getElementById('model');
+    
+    // 초기화
+    manufacturerSelect.innerHTML = '<option value="">제조사 선택</option>';
+    modelSelect.innerHTML = '<option value="">먼저 제조사를 선택하세요</option>';
+    
+    if (!category || !manufacturersData[category]) {
+        manufacturerSelect.innerHTML = '<option value="">먼저 카테고리를 선택하세요</option>';
+        return;
+    }
+    
+    // 제조사 옵션 추가
+    const manufacturers = Object.keys(manufacturersData[category]);
+    manufacturers.forEach(mf => {
+        const option = document.createElement('option');
+        option.value = mf;
+        option.textContent = mf;
+        manufacturerSelect.appendChild(option);
+    });
+}
+
+// 모델 선택 옵션 업데이트
+function updateModelOptions() {
+    const category = document.getElementById('category').value;
+    const manufacturer = document.getElementById('manufacturer').value;
+    const modelSelect = document.getElementById('model');
+    
+    // 초기화
+    modelSelect.innerHTML = '<option value="">모델 선택</option>';
+    
+    if (!category || !manufacturer || !manufacturersData[category] || !manufacturersData[category][manufacturer]) {
+        modelSelect.innerHTML = '<option value="">먼저 제조사를 선택하세요</option>';
+        return;
+    }
+    
+    // 모델 옵션 추가
+    const models = manufacturersData[category][manufacturer];
+    
+    if (models.length === 0) {
+        modelSelect.innerHTML = '<option value="">등록된 모델이 없습니다</option>';
+        return;
+    }
+    
+    models.forEach(model => {
+        const option = document.createElement('option');
+        option.value = model;
+        option.textContent = model;
+        modelSelect.appendChild(option);
+    });
 }
 
 // Supabase Storage에 파일 업로드
@@ -176,14 +248,17 @@ async function handleFormSubmit(e) {
         submitBtn.textContent = '저장 중...';
         
         // 4) 폼 데이터 구성
+        const isPublishedCheckbox = document.getElementById('isPublished');
         const formData = {
             title: document.getElementById('title').value.trim(),
             category: document.getElementById('category').value,
+            manufacturer: document.getElementById('manufacturer').value,
+            model: document.getElementById('model').value,
             content: document.getElementById('content').value.trim(),
             tags: document.getElementById('tags').value.trim(),
             media_urls: allMediaUrls.length > 0 ? allMediaUrls.join(',') : '',
-            is_published: document.getElementById('isPublished').checked,
-            views: 0
+            is_published: isPublishedCheckbox ? isPublishedCheckbox.checked : true,
+            views: editingManualId ? undefined : 0  // 수정 시에는 views 유지
         };
         
         console.log('[관리자] 저장할 데이터:', formData);
@@ -262,6 +337,10 @@ function resetForm() {
         videoUrlsInput.value = '';
     }
     
+    // 제조사/모델 선택 초기화
+    document.getElementById('manufacturer').innerHTML = '<option value="">먼저 카테고리를 선택하세요</option>';
+    document.getElementById('model').innerHTML = '<option value="">먼저 제조사를 선택하세요</option>';
+    
     editingManualId = null;
     
     document.getElementById('submitBtn').textContent = '등록하기';
@@ -333,6 +412,8 @@ function createAdminManualRow(manual) {
     row.innerHTML = `
         <td class="table-title">${escapeHtml(manual.title)}</td>
         <td>${escapeHtml(manual.category)}</td>
+        <td>${escapeHtml(manual.manufacturer || '-')}</td>
+        <td>${escapeHtml(manual.model || '-')}</td>
         <td>${manual.views || 0}</td>
         <td><span class="status-badge ${statusClass}">${statusText}</span></td>
         <td>${createdDate}</td>
@@ -367,6 +448,17 @@ async function editManual(manualId) {
         document.getElementById('manualId').value = manual.id;
         document.getElementById('title').value = manual.title;
         document.getElementById('category').value = manual.category;
+        
+        // 제조사 및 모델 업데이트
+        updateManufacturerOptions();
+        if (manual.manufacturer) {
+            document.getElementById('manufacturer').value = manual.manufacturer;
+            updateModelOptions();
+            if (manual.model) {
+                document.getElementById('model').value = manual.model;
+            }
+        }
+        
         document.getElementById('content').value = manual.content;
         document.getElementById('tags').value = manual.tags || '';
         document.getElementById('isPublished').checked = manual.is_published === true || manual.is_published === 'true' || manual.is_published === 1 || manual.is_published === '1';
@@ -504,28 +596,68 @@ function renderAdminPagination(totalCount) {
 
 // 알림 표시
 function showNotification(message, type = 'success') {
+    // 기존 알림 제거
+    const existingNotifications = document.querySelectorAll('.custom-notification');
+    existingNotifications.forEach(n => n.remove());
+    
     const notification = document.createElement('div');
+    notification.className = 'custom-notification';
     notification.style.cssText = `
         position: fixed;
-        top: 24px;
-        right: 24px;
-        padding: 16px 24px;
-        background-color: ${type === 'success' ? '#DEF7EC' : '#FEE2E2'};
-        color: ${type === 'success' ? '#047857' : '#DC2626'};
-        border-radius: 8px;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        top: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 20px 32px;
+        background-color: ${type === 'success' ? '#10B981' : '#EF4444'};
+        color: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         z-index: 10000;
-        font-weight: 500;
-        animation: slideIn 0.3s ease;
+        font-weight: 600;
+        font-size: 16px;
+        min-width: 300px;
+        text-align: center;
+        animation: slideDown 0.3s ease;
     `;
     notification.textContent = message;
+    
+    // 애니메이션 추가
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideDown {
+            from {
+                transform: translateX(-50%) translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
+        @keyframes slideUp {
+            from {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(-50%) translateY(-20px);
+                opacity: 0;
+            }
+        }
+    `;
+    if (!document.querySelector('#notification-styles')) {
+        style.id = 'notification-styles';
+        document.head.appendChild(style);
+    }
     
     document.body.appendChild(notification);
     
     setTimeout(() => {
-        notification.style.animation = 'slideOut 0.3s ease';
+        notification.style.animation = 'slideUp 0.3s ease';
         setTimeout(() => {
-            document.body.removeChild(notification);
+            if (notification.parentNode) {
+                document.body.removeChild(notification);
+            }
         }, 300);
     }, 3000);
 }

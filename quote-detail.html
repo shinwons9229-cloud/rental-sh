@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>견적문의 상세 | 시헌테크</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --color-primary: #0064ff;
+      --color-primary-hover: #0056e0;
+      --color-primary-soft: #e8f1ff;
+      --color-bg: #f9fbff;
+      --color-surface: #ffffff;
+      --color-border: #d7e3f7;
+      --color-border-strong: #b6c9eb;
+      --color-text-main: #1b3d73;
+      --color-text-sub: #4b5b82;
+      --color-label: #8ea1c8;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --max-width: 1140px;
+      --shadow-soft: 0 10px 24px rgba(0, 40, 120, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      background-color: var(--color-bg);
+      color: var(--color-text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* 헤더 */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: rgba(255, 255, 255, 0.8);
+      backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .header-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+    }
+
+    .logo-image {
+      height: 32px;
+      width: auto;
+    }
+
+    .logo-divider {
+      width: 1px;
+      height: 24px;
+      background-color: var(--color-border);
+    }
+
+    .logo-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-text-sub);
+    }
+
+    /* 네비게이션 드롭다운 */
+    .nav-item {
+      position: relative;
+      display: inline-block;
+    }
+
+    .nav-link {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--color-text-sub);
+      text-decoration: none;
+      transition: color 0.2s;
+      cursor: pointer;
+      padding: 20px 0;
+      display: block;
+    }
+
+    .nav-link:hover {
+      color: var(--color-primary);
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: white;
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 40, 120, 0.15);
+      min-width: 240px;
+      padding: 12px 0;
+      margin-top: 0;
+      z-index: 1000;
+    }
+
+    .nav-item:hover .dropdown-menu {
+      display: block;
+    }
+
+    .dropdown-menu::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: -20px;
+      right: -20px;
+      height: 8px;
+      background: transparent;
+    }
+
+    .dropdown-menu::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -20px;
+      bottom: 0;
+      width: 20px;
+      background: transparent;
+    }
+
+    .dropdown-item {
+      display: block;
+      padding: 12px 24px;
+      color: var(--color-text-main);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .dropdown-item:hover {
+      background: var(--color-primary-soft);
+      color: var(--color-primary);
+    }
+
+    /* 메인 */
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 24px;
+      min-height: calc(100vh - 200px);
+    }
+
+    /* 게시글 상세 */
+    .post-header {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin-bottom: 24px;
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .post-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--color-text-main);
+    }
+
+    .post-meta {
+      display: flex;
+      gap: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--color-border);
+      font-size: 14px;
+      color: var(--color-label);
+    }
+
+    .post-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .post-status {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .status-waiting {
+      background: #FEF3C7;
+      color: #92400E;
+    }
+
+    .status-completed {
+      background: #D1FAE5;
+      color: #065F46;
+    }
+
+    .post-content {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin-bottom: 24px;
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .content-section {
+      margin-bottom: 32px;
+    }
+
+    .content-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .content-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-label);
+      margin-bottom: 8px;
+    }
+
+    .content-text {
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--color-text-main);
+      white-space: pre-wrap;
+    }
+
+    .reply-section {
+      background: var(--color-primary-soft);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin-bottom: 24px;
+      border: 2px solid var(--color-primary);
+    }
+
+    .reply-header {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--color-primary);
+      margin-bottom: 16px;
+    }
+
+    .no-reply {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--color-label);
+      font-size: 15px;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 14px 32px;
+      border-radius: var(--radius-md);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      flex: 1;
+    }
+
+    .btn-primary {
+      background: var(--color-primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--color-primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 100, 255, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--color-surface);
+      color: var(--color-text-sub);
+      border: 2px solid var(--color-border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--color-border-strong);
+    }
+
+    /* 로딩 상태 */
+    .loading-state {
+      text-align: center;
+      padding: 100px 20px;
+      color: var(--color-label);
+      font-size: 17px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* 푸터 */
+    footer {
+      border-top: 1px solid var(--color-border);
+      background: var(--color-surface);
+      margin-top: 80px;
+    }
+
+    .footer-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 40px 24px;
+      text-align: center;
+      font-size: 15px;
+      color: var(--color-label);
+    }
+
+    /* 반응형 */
+    @media (max-width: 768px) {
+      .header-inner {
+        padding: 0 16px;
+        height: auto;
+        min-height: 64px;
+        flex-wrap: wrap;
+      }
+
+      .header-inner > div {
+        gap: 16px !important;
+      }
+
+      .logo-container {
+        gap: 12px;
+      }
+
+      .logo-image {
+        height: 24px;
+      }
+
+      .logo-text {
+        font-size: 15px;
+      }
+
+      .nav-link {
+        font-size: 15px;
+        padding: 12px 0;
+      }
+
+      .post-header,
+      .post-content,
+      .reply-section {
+        padding: 24px;
+      }
+
+      .post-title {
+        font-size: 22px;
+      }
+
+      .post-meta {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div style="display: flex; align-items: center; gap: 32px;">
+        <div class="logo-container" onclick="location.href='index.html'">
+          <img src="https://www.genspark.ai/api/files/s/nZUGwpE8" alt="시헌테크" class="logo-image">
+          <div class="logo-divider"></div>
+          <div class="logo-text">견적문의</div>
+        </div>
+        <a href="index.html" class="nav-link">A/S 매뉴얼</a>
+        <a href="https://wellyfit.co.kr/company/" target="_blank" class="nav-link">회사소개</a>
+        <div class="nav-item">
+          <span class="nav-link">제품</span>
+          <div class="dropdown-menu">
+            <a href="https://wellyfit.co.kr/sh-3025a/" target="_blank" class="dropdown-item">공기청정기 SH-3025A/AN</a>
+            <a href="https://wellyfit.co.kr/sh-3522a/" target="_blank" class="dropdown-item">공기청정기 SH-3522A/AN</a>
+            <a href="https://wellyfit.co.kr/sterilizer/" target="_blank" class="dropdown-item">공기청정살균기</a>
+            <a href="https://wellyfit.co.kr/circulator/" target="_blank" class="dropdown-item">공기순환기</a>
+          </div>
+        </div>
+        <a href="quote-list.html" class="nav-link">견적문의</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- 로딩 -->
+    <div id="loadingState" class="loading-state">로딩 중...</div>
+
+    <!-- 게시글 내용 -->
+    <div id="postContent" class="hidden">
+      <div class="post-header">
+        <h1 class="post-title" id="postTitle"></h1>
+        <div class="post-meta">
+          <div class="post-meta-item">
+            <strong>작성자:</strong>
+            <span id="postAuthor"></span>
+          </div>
+          <div class="post-meta-item">
+            <strong>연락처:</strong>
+            <span id="postContact"></span>
+          </div>
+          <div class="post-meta-item" id="postCompanyWrap" style="display: none;">
+            <strong>수요처명:</strong>
+            <span id="postCompany"></span>
+          </div>
+          <div class="post-meta-item">
+            <strong>작성일:</strong>
+            <span id="postDate"></span>
+          </div>
+          <div class="post-meta-item">
+            <span class="post-status" id="postStatus"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="post-content">
+        <div class="content-section">
+          <div class="content-label">문의내용</div>
+          <div class="content-text" id="postContentText"></div>
+        </div>
+
+        <!-- 첨부파일 -->
+        <div class="content-section" id="attachmentSection" style="display: none;">
+          <div class="content-label">첨부파일</div>
+          <div id="attachmentList" style="display: flex; flex-direction: column; gap: 8px;"></div>
+        </div>
+      </div>
+
+      <!-- 관리자 답변 -->
+      <div id="replySection">
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn btn-secondary" onclick="location.href='quote-list.html'">목록으로</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div style="margin-bottom: 12px; font-weight: 600; color: var(--color-text-main);">주식회사 시헌테크</div>
+      <div style="font-size: 14px; line-height: 1.8;">
+        대표자 : 유재천 | 사업자등록번호 : 811-81-02009<br>
+        사업장주소 : 경기도 파주시 검산로 301-50
+      </div>
+      <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--color-border);">
+        Copyright © 시헌테크 All Rights Reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Supabase 라이브러리 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <!-- 설정 파일 -->
+  <script src="js/config.js"></script>
+
+  <script>
+    // 비밀번호 해시 함수
+    async function hashPassword(password) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(password);
+      const hash = await crypto.subtle.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hash));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // URL 파라미터에서 정보 가져오기
+    const urlParams = new URLSearchParams(window.location.search);
+    const quoteId = urlParams.get('id');
+    const password = urlParams.get('pw');
+
+    // 파라미터 검증
+    if (!quoteId || !password) {
+      alert('잘못된 접근입니다.');
+      location.href = 'quote-list.html';
+    }
+
+    // 게시글 로드
+    async function loadQuote() {
+      try {
+        // 비밀번호 검증
+        const hashedPassword = await hashPassword(password);
+        
+        // 게시글 정보 가져오기
+        const response = await fetch(`tables/quotes/${quoteId}`);
+        if (!response.ok) {
+          throw new Error('게시글을 찾을 수 없습니다.');
+        }
+
+        const quote = await response.json();
+
+        // 비밀번호 확인
+        if (quote.password !== hashedPassword) {
+          alert('비밀번호가 일치하지 않습니다.');
+          location.href = 'quote-list.html';
+          return;
+        }
+
+        // 게시글 렌더링
+        renderQuote(quote);
+
+        document.getElementById('loadingState').classList.add('hidden');
+        document.getElementById('postContent').classList.remove('hidden');
+
+      } catch (error) {
+        console.error('로딩 오류:', error);
+        alert('오류가 발생했습니다: ' + error.message);
+        location.href = 'quote-list.html';
+      }
+    }
+
+    // 게시글 렌더링
+    function renderQuote(quote) {
+      document.getElementById('postTitle').textContent = quote.title;
+      document.getElementById('postAuthor').textContent = quote.author_name;
+      document.getElementById('postContact').textContent = quote.contact;
+      
+      if (quote.customer_name) {
+        document.getElementById('postCompanyWrap').style.display = 'flex';
+        document.getElementById('postCompany').textContent = quote.customer_name;
+      }
+
+      const date = new Date(quote.created_at).toLocaleString('ko-KR');
+      document.getElementById('postDate').textContent = date;
+
+      const statusEl = document.getElementById('postStatus');
+      const statusClass = quote.status === '답변완료' ? 'status-completed' : 'status-waiting';
+      statusEl.className = `post-status ${statusClass}`;
+      statusEl.textContent = quote.status || '대기중';
+
+      document.getElementById('postContentText').textContent = quote.content;
+
+      // 첨부파일 표시
+      if (quote.attachments && quote.attachments.trim()) {
+        const attachmentSection = document.getElementById('attachmentSection');
+        const attachmentList = document.getElementById('attachmentList');
+        const urls = quote.attachments.split(',').map(u => u.trim()).filter(u => u);
+        
+        if (urls.length > 0) {
+          attachmentSection.style.display = 'block';
+          attachmentList.innerHTML = urls.map((url, index) => {
+            const fileName = url.split('/').pop().split('_').slice(2).join('_') || `첨부파일${index + 1}`;
+            return `
+              <a href="${url}" target="_blank" download style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: var(--color-primary-soft); border-radius: 8px; color: var(--color-primary); text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.2s;">
+                <span style="font-size: 18px;">📎</span>
+                <span>${escapeHtml(fileName)}</span>
+              </a>
+            `;
+          }).join('');
+        }
+      }
+
+      // 답변 표시
+      const replySection = document.getElementById('replySection');
+      if (quote.admin_reply && quote.admin_reply.trim()) {
+        let replyHtml = `
+          <div class="reply-section">
+            <div class="reply-header">✓ 관리자 답변</div>
+            <div class="content-text">${escapeHtml(quote.admin_reply)}</div>
+        `;
+        
+        // 관리자 첨부파일 표시
+        if (quote.admin_attachments && quote.admin_attachments.trim()) {
+          const adminUrls = quote.admin_attachments.split(',').map(u => u.trim()).filter(u => u);
+          if (adminUrls.length > 0) {
+            replyHtml += `
+              <div style="margin-top: 16px;">
+                <strong style="display: block; margin-bottom: 8px; font-size: 14px; color: var(--color-text-sub);">첨부파일:</strong>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                  ${adminUrls.map((url, index) => {
+                    const fileName = url.split('/').pop().split('_').slice(2).join('_') || `첨부파일${index + 1}`;
+                    return `
+                      <a href="${url}" target="_blank" download style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: white; border: 2px solid var(--color-primary); border-radius: 8px; color: var(--color-primary); text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.2s;">
+                        <span style="font-size: 18px;">📎</span>
+                        <span>${escapeHtml(fileName)}</span>
+                      </a>
+                    `;
+                  }).join('')}
+                </div>
+              </div>
+            `;
+          }
+        }
+        
+        replyHtml += `</div>`;
+        replySection.innerHTML = replyHtml;
+      } else {
+        replySection.innerHTML = `
+          <div class="reply-section">
+            <div class="no-reply">답변 대기 중입니다.<br>빠른 시일 내에 답변드리겠습니다.</div>
+          </div>
+        `;
+      }
+    }
+
+    // HTML 이스케이프
+    function escapeHtml(text) {
+      if (!text) return '';
+      const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      };
+      return text.replace(/[&<>"']/g, m => map[m]);
+    }
+
+    // 페이지 로드 시 실행
+    loadQuote();
+  </script>
+</body>
+</html>

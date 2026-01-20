@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>견적문의 | 시헌테크</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --color-primary: #0064ff;
+      --color-primary-hover: #0056e0;
+      --color-primary-soft: #e8f1ff;
+      --color-bg: #f9fbff;
+      --color-surface: #ffffff;
+      --color-border: #d7e3f7;
+      --color-border-strong: #b6c9eb;
+      --color-text-main: #1b3d73;
+      --color-text-sub: #4b5b82;
+      --color-label: #8ea1c8;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --max-width: 1140px;
+      --shadow-soft: 0 10px 24px rgba(0, 40, 120, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      background-color: var(--color-bg);
+      color: var(--color-text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* 헤더 */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: rgba(255, 255, 255, 0.8);
+      backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .header-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+    }
+
+    .logo-image {
+      height: 32px;
+      width: auto;
+    }
+
+    .logo-divider {
+      width: 1px;
+      height: 24px;
+      background-color: var(--color-border);
+    }
+
+    .logo-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-text-sub);
+    }
+
+    /* 네비게이션 드롭다운 */
+    .nav-item {
+      position: relative;
+      display: inline-block;
+    }
+
+    .nav-link {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--color-text-sub);
+      text-decoration: none;
+      transition: color 0.2s;
+      cursor: pointer;
+      padding: 20px 0;
+      display: block;
+    }
+
+    .nav-link:hover {
+      color: var(--color-primary);
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: white;
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 40, 120, 0.15);
+      min-width: 240px;
+      padding: 12px 0;
+      margin-top: 0;
+      z-index: 1000;
+    }
+
+    .nav-item:hover .dropdown-menu {
+      display: block;
+    }
+
+    .dropdown-menu::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: -20px;
+      right: -20px;
+      height: 8px;
+      background: transparent;
+    }
+
+    .dropdown-menu::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -20px;
+      bottom: 0;
+      width: 20px;
+      background: transparent;
+    }
+
+    .dropdown-item {
+      display: block;
+      padding: 12px 24px;
+      color: var(--color-text-main);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .dropdown-item:hover {
+      background: var(--color-primary-soft);
+      color: var(--color-primary);
+    }
+
+    /* 메인 */
+    main {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 40px 24px;
+      min-height: calc(100vh - 200px);
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .page-title {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      color: var(--color-text-main);
+    }
+
+    .btn-write {
+      padding: 12px 24px;
+      border-radius: var(--radius-md);
+      background: var(--color-primary);
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-write:hover {
+      background: var(--color-primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 100, 255, 0.3);
+    }
+
+    /* 게시판 테이블 */
+    .board-table {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border);
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead {
+      background: var(--color-bg);
+      border-bottom: 2px solid var(--color-border);
+    }
+
+    th {
+      padding: 16px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-text-sub);
+      text-align: left;
+    }
+
+    td {
+      padding: 20px 16px;
+      border-bottom: 1px solid var(--color-border);
+      font-size: 15px;
+      color: var(--color-text-main);
+    }
+
+    tbody tr {
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    tbody tr:hover {
+      background: var(--color-primary-soft);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .board-title {
+      font-weight: 600;
+      color: var(--color-text-main);
+    }
+
+    .board-status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .status-waiting {
+      background: #FEF3C7;
+      color: #92400E;
+    }
+
+    .status-completed {
+      background: #D1FAE5;
+      color: #065F46;
+    }
+
+    .text-center {
+      text-align: center !important;
+    }
+
+    /* 로딩/빈 상태 */
+    .loading-state,
+    .empty-state {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--color-label);
+      font-size: 16px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* 비밀번호 모달 */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 10000;
+    }
+
+    .modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-content {
+      position: relative;
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--color-text-main);
+    }
+
+    .modal-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-size: 15px;
+      margin-bottom: 20px;
+    }
+
+    .modal-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .modal-btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: var(--radius-md);
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .modal-btn-primary {
+      background: var(--color-primary);
+      color: white;
+    }
+
+    .modal-btn-primary:hover {
+      background: var(--color-primary-hover);
+    }
+
+    .modal-btn-secondary {
+      background: var(--color-border);
+      color: var(--color-text-sub);
+    }
+
+    .modal-btn-secondary:hover {
+      background: var(--color-border-strong);
+    }
+
+    /* 푸터 */
+    footer {
+      border-top: 1px solid var(--color-border);
+      background: var(--color-surface);
+      margin-top: 80px;
+    }
+
+    .footer-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 40px 24px;
+      text-align: center;
+      font-size: 15px;
+      color: var(--color-label);
+    }
+
+    /* 반응형 */
+    @media (max-width: 768px) {
+      .header-inner {
+        padding: 0 16px;
+        height: auto;
+        min-height: 64px;
+        flex-wrap: wrap;
+      }
+
+      .header-inner > div {
+        gap: 16px !important;
+      }
+
+      .logo-container {
+        gap: 12px;
+      }
+
+      .logo-image {
+        height: 24px;
+      }
+
+      .logo-text {
+        font-size: 15px;
+      }
+
+      .nav-link {
+        font-size: 15px;
+        padding: 12px 0;
+      }
+
+      .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+
+      .page-title {
+        font-size: 28px;
+      }
+
+      .board-table {
+        overflow-x: auto;
+      }
+
+      table {
+        min-width: 600px;
+      }
+
+      th, td {
+        padding: 12px 8px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div style="display: flex; align-items: center; gap: 32px;">
+        <div class="logo-container" onclick="location.href='index.html'">
+          <img src="https://www.genspark.ai/api/files/s/nZUGwpE8" alt="시헌테크" class="logo-image">
+          <div class="logo-divider"></div>
+          <div class="logo-text">견적문의</div>
+        </div>
+        <a href="index.html" class="nav-link">A/S 매뉴얼</a>
+        <a href="https://wellyfit.co.kr/company/" target="_blank" class="nav-link">회사소개</a>
+        <div class="nav-item">
+          <span class="nav-link">제품</span>
+          <div class="dropdown-menu">
+            <a href="https://wellyfit.co.kr/sh-3025a/" target="_blank" class="dropdown-item">공기청정기 SH-3025A/AN</a>
+            <a href="https://wellyfit.co.kr/sh-3522a/" target="_blank" class="dropdown-item">공기청정기 SH-3522A/AN</a>
+            <a href="https://wellyfit.co.kr/sterilizer/" target="_blank" class="dropdown-item">공기청정살균기</a>
+            <a href="https://wellyfit.co.kr/circulator/" target="_blank" class="dropdown-item">공기순환기</a>
+          </div>
+        </div>
+        <a href="quote-list.html" class="nav-link">견적문의</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-header">
+      <h1 class="page-title">견적문의</h1>
+      <button class="btn-write" onclick="location.href='quote-write.html'">문의하기</button>
+    </div>
+
+    <!-- 로딩 -->
+    <div id="loadingState" class="loading-state">로딩 중...</div>
+
+    <!-- 빈 상태 -->
+    <div id="emptyState" class="empty-state hidden">
+      등록된 문의가 없습니다.<br>
+      <button class="btn-write" style="margin-top: 20px;" onclick="location.href='quote-write.html'">첫 문의 작성하기</button>
+    </div>
+
+    <!-- 게시판 테이블 -->
+    <div id="boardTable" class="board-table hidden">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 80px;" class="text-center">번호</th>
+            <th>제목</th>
+            <th style="width: 120px;" class="text-center">작성자</th>
+            <th style="width: 120px;" class="text-center">상태</th>
+            <th style="width: 140px;" class="text-center">작성일</th>
+          </tr>
+        </thead>
+        <tbody id="quoteList">
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- 비밀번호 확인 모달 -->
+  <div id="passwordModal" class="modal">
+    <div class="modal-overlay" onclick="closePasswordModal()"></div>
+    <div class="modal-content">
+      <h3 class="modal-title">비밀번호 확인</h3>
+      <input type="password" id="passwordInput" class="modal-input" placeholder="비밀번호를 입력하세요" />
+      <div class="modal-buttons">
+        <button class="modal-btn modal-btn-secondary" onclick="closePasswordModal()">취소</button>
+        <button class="modal-btn modal-btn-primary" onclick="verifyPassword()">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div style="margin-bottom: 12px; font-weight: 600; color: var(--color-text-main);">주식회사 시헌테크</div>
+      <div style="font-size: 14px; line-height: 1.8;">
+        대표자 : 유재천 | 사업자등록번호 : 811-81-02009<br>
+        사업장주소 : 경기도 파주시 검산로 301-50
+      </div>
+      <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--color-border);">
+        Copyright © 시헌테크 All Rights Reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Supabase 라이브러리 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <!-- 설정 파일 -->
+  <script src="js/config.js"></script>
+
+  <script>
+    let currentQuoteId = null;
+
+    // 비밀번호 해시 함수
+    async function hashPassword(password) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(password);
+      const hash = await crypto.subtle.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hash));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // 견적문의 목록 로드
+    async function loadQuotes() {
+      try {
+        const response = await fetch('tables/quotes?sort=-created_at&limit=100');
+        if (!response.ok) {
+          throw new Error('데이터를 불러오는데 실패했습니다.');
+        }
+
+        const result = await response.json();
+        const quotes = result.data || [];
+
+        document.getElementById('loadingState').classList.add('hidden');
+
+        if (quotes.length === 0) {
+          document.getElementById('emptyState').classList.remove('hidden');
+        } else {
+          renderQuotes(quotes);
+          document.getElementById('boardTable').classList.remove('hidden');
+        }
+
+      } catch (error) {
+        console.error('로딩 오류:', error);
+        document.getElementById('loadingState').innerHTML = '데이터를 불러오는데 실패했습니다.';
+      }
+    }
+
+    // 목록 렌더링
+    function renderQuotes(quotes) {
+      const quoteList = document.getElementById('quoteList');
+      quoteList.innerHTML = quotes.map((quote, index) => {
+        const date = new Date(quote.created_at).toLocaleDateString('ko-KR');
+        const statusClass = quote.status === '답변완료' ? 'status-completed' : 'status-waiting';
+        const statusText = quote.status || '대기중';
+        const hasAttachment = quote.attachments && quote.attachments.trim();
+        
+        return `
+          <tr onclick="openPasswordModal('${quote.id}')">
+            <td class="text-center">${quotes.length - index}</td>
+            <td class="board-title">
+              ${escapeHtml(quote.title)}
+              ${hasAttachment ? '<span style="margin-left: 6px; font-size: 14px;">📎</span>' : ''}
+            </td>
+            <td class="text-center">${escapeHtml(quote.author_name)}</td>
+            <td class="text-center"><span class="board-status ${statusClass}">${statusText}</span></td>
+            <td class="text-center">${date}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // 비밀번호 모달 열기
+    function openPasswordModal(quoteId) {
+      currentQuoteId = quoteId;
+      document.getElementById('passwordModal').classList.add('active');
+      document.getElementById('passwordInput').value = '';
+      document.getElementById('passwordInput').focus();
+    }
+
+    // 비밀번호 모달 닫기
+    function closePasswordModal() {
+      document.getElementById('passwordModal').classList.remove('active');
+      currentQuoteId = null;
+    }
+
+    // 비밀번호 확인
+    async function verifyPassword() {
+      const password = document.getElementById('passwordInput').value;
+      
+      if (!password) {
+        alert('비밀번호를 입력하세요.');
+        return;
+      }
+
+      try {
+        const hashedPassword = await hashPassword(password);
+        
+        // 해당 게시글 정보 가져오기
+        const response = await fetch(`tables/quotes/${currentQuoteId}`);
+        if (!response.ok) {
+          throw new Error('게시글을 찾을 수 없습니다.');
+        }
+
+        const quote = await response.json();
+
+        // 비밀번호 확인
+        if (quote.password === hashedPassword) {
+          location.href = `quote-detail.html?id=${currentQuoteId}&pw=${encodeURIComponent(password)}`;
+        } else {
+          alert('비밀번호가 일치하지 않습니다.');
+          document.getElementById('passwordInput').value = '';
+          document.getElementById('passwordInput').focus();
+        }
+
+      } catch (error) {
+        console.error('확인 오류:', error);
+        alert('오류가 발생했습니다: ' + error.message);
+      }
+    }
+
+    // Enter 키로 비밀번호 확인
+    document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        verifyPassword();
+      }
+    });
+
+    // HTML 이스케이프
+    function escapeHtml(text) {
+      if (!text) return '';
+      const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      };
+      return text.replace(/[&<>"']/g, m => map[m]);
+    }
+
+    // 페이지 로드 시 실행
+    loadQuotes();
+  </script>
+</body>
+</html>
