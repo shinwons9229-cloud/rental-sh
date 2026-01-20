@@ -842,7 +842,7 @@
     async function loadCategoryCounts() {
       try {
         // Supabase가 초기화될 때까지 대기
-        if (!window.supabase?.from) {
+        if (!window.sb?.from) {
           console.log('Supabase 초기화 대기 중...');
           setTimeout(loadCategoryCounts, 100);
           return;
@@ -852,7 +852,7 @@
         const countIds = ['countInkjet', 'countLaser', 'countCleaner'];
 
         for (let i = 0; i < categories.length; i++) {
-          const { count, error } = await window.supabase
+          const { count, error } = await window.sb
             .from('manuals')
             .select('*', { count: 'exact', head: true })
             .eq('category', categories[i])
