@@ -222,7 +222,7 @@ async function uploadAdminFiles(files) {
             const ext = file.name.split('.').pop();
             const fileName = `admin_quote_${timestamp}_${random}.${ext}`;
             
-            const { data, error } = await window.sb.storage
+            const { data, error } = await supabase.storage
                 .from('manual-media')
                 .upload(fileName, file, {
                     cacheControl: '3600',
@@ -233,7 +233,7 @@ async function uploadAdminFiles(files) {
                 throw new Error(`파일 업로드 실패: ${error.message}`);
             }
             
-            const { data: publicData } = window.sb.storage
+            const { data: publicData } = supabase.storage
                 .from('manual-media')
                 .getPublicUrl(fileName);
             

@@ -556,8 +556,16 @@
       location.href = `models.html?category=${encodeURIComponent(category)}&manufacturer=${encodeURIComponent(manufacturer)}`;
     }
 
-    // 페이지 로드 시 실행
-    loadManufacturers();
+    // Supabase 클라이언트 준비 후 실행
+    function waitAndLoad() {
+      if (window.supabase && typeof window.supabase.from === 'function') {
+        loadManufacturers();
+      } else {
+        setTimeout(waitAndLoad, 30);
+      }
+    }
+    waitAndLoad();
+
   </script>
 </body>
 </html>

@@ -157,7 +157,7 @@ async function uploadMediaFiles(files) {
             const fileName = `${timestamp}_${random}.${ext}`;
             
             // Supabase Storage에 업로드
-            const { data, error } = await window.sb.storage
+            const { data, error } = await supabase.storage
                 .from('manual-media')
                 .upload(fileName, file, {
                     cacheControl: '3600',
@@ -169,7 +169,7 @@ async function uploadMediaFiles(files) {
             }
             
             // Public URL 생성
-            const { data: publicData } = window.sb.storage
+            const { data: publicData } = supabase.storage
                 .from('manual-media')
                 .getPublicUrl(fileName);
             
@@ -193,7 +193,7 @@ async function getManuals() {
     try {
         console.log('[관리자] Supabase에서 매뉴얼 로드');
         
-        const { data, error } = await window.sb
+        const { data, error } = await supabase
             .from('manuals')
             .select('*')
             .order('created_at', { ascending: false });
@@ -268,7 +268,7 @@ async function handleFormSubmit(e) {
         if (editingManualId) {
             // 수정
             console.log('[관리자] UPDATE:', editingManualId);
-            ({ data: result, error } = await window.sb
+            ({ data: result, error } = await supabase
                 .from('manuals')
                 .update(formData)
                 .eq('id', editingManualId)
@@ -277,7 +277,7 @@ async function handleFormSubmit(e) {
         } else {
             // 신규 등록
             console.log('[관리자] INSERT');
-            ({ data: result, error } = await window.sb
+            ({ data: result, error } = await supabase
                 .from('manuals')
                 .insert([formData])
                 .select()
@@ -433,7 +433,7 @@ async function editManual(manualId) {
     try {
         console.log('[관리자] 수정 요청:', manualId);
         
-        const { data: manual, error } = await window.sb
+        const { data: manual, error } = await supabase
             .from('manuals')
             .select('*')
             .eq('id', manualId)
@@ -515,7 +515,7 @@ async function confirmDelete() {
     try {
         console.log('[관리자] DELETE:', deleteTargetId);
         
-        const { error } = await window.sb
+        const { error } = await supabase
             .from('manuals')
             .delete()
             .eq('id', deleteTargetId);

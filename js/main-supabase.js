@@ -45,7 +45,7 @@ async function getManuals() {
     try {
         console.log('Supabase에서 매뉴얼 로드 시작');
         
-        const { data, error } = await window.sb
+        const { data, error } = await supabase
             .from('manuals')
             .select('*')
             .order('created_at', { ascending: false });
@@ -305,7 +305,7 @@ function closeModal() {
 async function incrementViews(manualId) {
     try {
         // 현재 조회수 가져오기
-        const { data: manual, error: fetchError } = await window.sb
+        const { data: manual, error: fetchError } = await supabase
             .from('manuals')
             .select('views')
             .eq('id', manualId)
@@ -319,7 +319,7 @@ async function incrementViews(manualId) {
         // 조회수 증가
         const newViews = (manual.views || 0) + 1;
         
-        const { error: updateError } = await window.sb
+        const { error: updateError } = await supabase
             .from('manuals')
             .update({ views: newViews })
             .eq('id', manualId);
