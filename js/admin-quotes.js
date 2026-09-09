@@ -39,15 +39,14 @@ async function loadQuotes() {
     if (tableWrapper) tableWrapper.style.display = 'none';
     
     try {
-        // RESTful API로 견적문의 데이터 가져오기
-        const response = await fetch(`tables/quotes?sort=-created_at&limit=100`);
-        
-        if (!response.ok) {
-            throw new Error('데이터를 불러오는데 실패했습니다.');
-        }
-        
-        const result = await response.json();
-        let quotes = result.data || [];
+        const { data, error } = await window.supabase
+            .from('quotes')
+            .select('*')
+            .order('created_at', { ascending: false })
+            .limit(100);
+
+        if (error) throw error;
+        let quotes = data || [];
         
         // 상태 필터링
         if (currentQuoteStatus !== 'all') {
@@ -109,13 +108,13 @@ function renderQuotes(quotes) {
 // 견적문의 상세보기
 async function viewQuoteDetail(quoteId) {
     try {
-        const response = await fetch(`tables/quotes/${quoteId}`);
-        
-        if (!response.ok) {
-            throw new Error('견적문의를 찾을 수 없습니다.');
-        }
-        
-        const quote = await response.json();
+        const { data: quote, error } = await window.supabase
+            .from('quotes')
+            .select('*')
+            .eq('id', quoteId)
+            .single();
+
+        if (error) throw error;
         currentQuoteId = quoteId;
         
         // 모달에 데이터 표시
@@ -282,70 +281,36 @@ async function saveQuoteReply() {
             
             newAttachmentUrls = await uploadAdminFiles(files);
         }
-
         // 기존 첨부파일 가져오기
-        const response = await fetch(`tables/quotes/${currentQuoteId}`);
-        if (!response.ok) {
-            console.error('[관리자] 견적문의 조회 실패:', response.status, response.statusText);
-            throw new Error(`견적문의를 불러올 수 없습니다. (Status: ${response.status})`);
-        }
-        const currentQuote = await response.json();
-        console.log('[관리자] 현재 견적문의 데이터:', currentQuote);
-        
-        const existingUrls = currentQuote.admin_attachments 
+        const { data: currentQuote, error: readError } = await window.supabase
+            .from('quotes')
+            .select('admin_attachments')
+            .eq('id', currentQuoteId)
+            .single();
+
+        if (readError) throw readError;
+
+        const existingUrls = currentQuote?.admin_attachments
             ? currentQuote.admin_attachments.split(',').map(u => u.trim()).filter(u => u)
             : [];
 
-        // 기존 + 새 파일 병합
         const allAttachments = [...existingUrls, ...newAttachmentUrls];
-        
-        // 업데이트할 데이터 구성
         const updateData = {
             admin_reply: adminReply,
-            status: '답변완료'
+            status: '답변완료',
+            updated_at: new Date().toISOString()
         };
-        
-        // 첨부파일이 있는 경우에만 추가
+
         if (allAttachments.length > 0) {
             updateData.admin_attachments = allAttachments.join(',');
         }
-        
-        console.log('[관리자] 업데이트 데이터:', updateData);
-        
-        // 답변 저장 (상태도 답변완료로 변경)
-        // PUT 메소드는 전체 데이터를 전송해야 하므로 기존 데이터와 병합
-        const fullUpdateData = {
-            ...currentQuote,
-            admin_reply: adminReply,
-            status: '답변완료'
-        };
-        
-        if (allAttachments.length > 0) {
-            fullUpdateData.admin_attachments = allAttachments.join(',');
-        }
-        
-        console.log('[관리자] 전체 업데이트 데이터:', fullUpdateData);
-        
-        const updateResponse = await fetch(`tables/quotes/${currentQuoteId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(fullUpdateData)
-        });
-        
-        if (!updateResponse.ok) {
-            const errorText = await updateResponse.text();
-            console.error('[관리자] 답변 저장 실패 상세:', {
-                status: updateResponse.status,
-                statusText: updateResponse.statusText,
-                body: errorText
-            });
-            throw new Error(`답변 저장에 실패했습니다. (Status: ${updateResponse.status}) ${errorText}`);
-        }
-        
-        const result = await updateResponse.json();
-        console.log('[관리자] 답변 저장 성공:', result);
+
+        const { error: updateError } = await window.supabase
+            .from('quotes')
+            .update(updateData)
+            .eq('id', currentQuoteId);
+
+        if (updateError) throw updateError;
         
         alert('답변이 저장되었습니다.');
         closeQuoteModal();
@@ -470,13 +435,12 @@ async function confirmDeleteQuote() {
     if (!deleteQuoteId) return;
     
     try {
-        const response = await fetch(`tables/quotes/${deleteQuoteId}`, {
-            method: 'DELETE'
-        });
-        
-        if (!response.ok) {
-            throw new Error('삭제에 실패했습니다.');
-        }
+        const { error } = await window.supabase
+            .from('quotes')
+            .delete()
+            .eq('id', deleteQuoteId);
+
+        if (error) throw error;
         
         alert('견적문의가 삭제되었습니다.');
         closeDeleteQuoteModal();

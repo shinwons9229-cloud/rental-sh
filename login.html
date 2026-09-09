@@ -87,11 +87,11 @@
     <div class="login-card">
       <div class="login-title">시헌테크 관리자</div>
       <div class="login-sub">
-        관리자 아이디와 비밀번호를 입력해 주세요.
+        Supabase 관리자 이메일과 비밀번호를 입력해 주세요.
       </div>
 
-      <div class="login-label">아이디</div>
-      <input id="login-id" class="login-input" type="text" autocomplete="username" />
+      <div class="login-label">관리자 이메일</div>
+      <input id="login-id" class="login-input" type="text" autocomplete="email" />
 
       <div class="login-label">비밀번호</div>
       <input id="login-pw" class="login-input" type="password" autocomplete="current-password" />
@@ -106,33 +106,47 @@
     </div>
   </div>
 
-  <script src="js/auth.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/auth.js"></script>
   <script>
     // 이미 로그인 되어 있으면 바로 admin으로 이동
-    if (isAdminLoggedIn()) {
-      window.location.href = "admin.html";
-    }
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (await isAdminLoggedIn()) {
+        window.location.href = "admin.html";
+      }
+    });
 
     const idInput = document.getElementById("login-id");
     const pwInput = document.getElementById("login-pw");
     const loginBtn = document.getElementById("login-btn");
     const errorBox = document.getElementById("login-error");
+    async function doLogin() {
+      const email = idInput.value.trim();
+      const pw = pwInput.value;
 
-    function doLogin() {
-      const id = idInput.value.trim();
-      const pw = pwInput.value.trim();
-
-      if (!id || !pw) {
-        errorBox.textContent = "아이디와 비밀번호를 모두 입력해 주세요.";
+      if (!email || !pw) {
+        errorBox.textContent = "이메일과 비밀번호를 모두 입력해 주세요.";
         return;
       }
 
-      const ok = adminLogin(id, pw);
-      if (ok) {
-        errorBox.textContent = "";
-        window.location.href = "admin.html";
-      } else {
-        errorBox.textContent = "아이디 또는 비밀번호가 올바르지 않습니다.";
+      loginBtn.disabled = true;
+      loginBtn.textContent = "로그인 중...";
+      errorBox.textContent = "";
+
+      try {
+        const ok = await adminLogin(email, pw);
+        if (ok) {
+          window.location.href = "admin.html";
+        } else {
+          errorBox.textContent = "이메일 또는 비밀번호가 올바르지 않거나 관리자 계정이 아닙니다.";
+        }
+      } catch (error) {
+        console.error('[로그인] 오류:', error);
+        errorBox.textContent = "로그인 중 오류가 발생했습니다.";
+      } finally {
+        loginBtn.disabled = false;
+        loginBtn.textContent = "로그인";
       }
     }
 

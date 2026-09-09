@@ -552,27 +552,20 @@
       const hashArray = Array.from(new Uint8Array(hash));
       return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
-
     // 견적문의 목록 로드
     async function loadQuotes() {
       try {
-        const response = await fetch('tables/quotes?sort=-created_at&limit=100');
-        if (!response.ok) {
-          throw new Error('데이터를 불러오는데 실패했습니다.');
-        }
-
-        const result = await response.json();
-        const quotes = result.data || [];
+        const { data: quotes, error } = await window.supabase.rpc('get_public_quotes');
+        if (error) throw error;
 
         document.getElementById('loadingState').classList.add('hidden');
 
-        if (quotes.length === 0) {
+        if (!quotes || quotes.length === 0) {
           document.getElementById('emptyState').classList.remove('hidden');
         } else {
           renderQuotes(quotes);
           document.getElementById('boardTable').classList.remove('hidden');
         }
-
       } catch (error) {
         console.error('로딩 오류:', error);
         document.getElementById('loadingState').innerHTML = '데이터를 불러오는데 실패했습니다.';
@@ -616,11 +609,10 @@
       document.getElementById('passwordModal').classList.remove('active');
       currentQuoteId = null;
     }
-
     // 비밀번호 확인
     async function verifyPassword() {
       const password = document.getElementById('passwordInput').value;
-      
+
       if (!password) {
         alert('비밀번호를 입력하세요.');
         return;
@@ -628,24 +620,20 @@
 
       try {
         const hashedPassword = await hashPassword(password);
-        
-        // 해당 게시글 정보 가져오기
-        const response = await fetch(`tables/quotes/${currentQuoteId}`);
-        if (!response.ok) {
-          throw new Error('게시글을 찾을 수 없습니다.');
-        }
+        const { data, error } = await window.supabase.rpc('verify_quote_password', {
+          p_id: Number(currentQuoteId),
+          p_password: hashedPassword
+        });
 
-        const quote = await response.json();
+        if (error) throw error;
 
-        // 비밀번호 확인
-        if (quote.password === hashedPassword) {
+        if (data && data.length > 0) {
           location.href = `quote-detail.html?id=${currentQuoteId}&pw=${encodeURIComponent(password)}`;
         } else {
           alert('비밀번호가 일치하지 않습니다.');
           document.getElementById('passwordInput').value = '';
           document.getElementById('passwordInput').focus();
         }
-
       } catch (error) {
         console.error('확인 오류:', error);
         alert('오류가 발생했습니다: ' + error.message);

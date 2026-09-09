@@ -560,21 +560,14 @@
           admin_reply: null,
           attachments: attachmentUrls.length > 0 ? attachmentUrls.join(',') : null
         };
+        // Supabase에 견적문의 등록
+        const { error } = await window.supabase
+          .from('quotes')
+          .insert([formData]);
 
-        // RESTful API를 사용하여 데이터 등록
-        const response = await fetch('tables/quotes', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(formData)
-        });
-
-        if (!response.ok) {
-          throw new Error('등록에 실패했습니다.');
+        if (error) {
+          throw new Error('등록에 실패했습니다: ' + error.message);
         }
-
-        const result = await response.json();
 
         alert('견적문의가 등록되었습니다.\n빠른 시일 내에 답변드리겠습니다.');
         location.href = 'quote-list.html';

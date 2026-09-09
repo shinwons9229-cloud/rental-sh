@@ -6,13 +6,8 @@
     <title>관리자 페이지 - 시헌테크</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="js/auth.js"></script>
 </head>
 <body>
-    <script>
-        // 로그인되지 않은 사용자는 login.html로 리다이렉트
-        requireAdminAuth();
-    </script>
     <!-- 헤더 -->
     <header class="header">
         <div class="container">
@@ -396,6 +391,8 @@
     
     <!-- 설정 파일 -->
     <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', requireAdminAuth);</script>
     <script src="js/equipment-models.js"></script>
     
     <!-- 관리자 스크립트 -->

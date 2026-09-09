@@ -1,36 +1,79 @@
 // js/auth.js
+// Supabase Authentication 기반 관리자 로그인
 
-// 관리자 계정 정보 (실제 운영 시에는 값만 변경해서 사용)
-const ADMIN_CREDENTIALS = {
-  id: "shrental",        // 관리자 아이디
-  pw: "bang3477!!"       // 관리자 비밀번호
-};
+const ADMIN_USER_ID = "1589903e-b1c5-41a9-96e1-d1c31d6ac1ac";
 
-const AUTH_KEY = "st_admin_token_v1";
+async function getSupabaseClient() {
+  for (let i = 0; i < 50; i++) {
+    if (window.supabase && typeof window.supabase.auth?.getSession === 'function') {
+      return window.supabase;
+    }
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+  throw new Error('Supabase 연결이 준비되지 않았습니다.');
+}
 
 // 로그인 시도 함수
-function adminLogin(inputId, inputPw) {
-  if (inputId === ADMIN_CREDENTIALS.id && inputPw === ADMIN_CREDENTIALS.pw) {
-    localStorage.setItem(AUTH_KEY, "ok");
-    return true;
+async function adminLogin(email, password) {
+  const client = await getSupabaseClient();
+
+  const { data, error } = await client.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    console.error('[관리자 로그인] 실패:', error);
+    return false;
   }
-  return false;
+
+  if (!data?.user || data.user.id !== ADMIN_USER_ID) {
+    await client.auth.signOut();
+    console.warn('[관리자 로그인] 허용되지 않은 계정');
+    return false;
+  }
+
+  return true;
 }
 
 // 로그인 여부 확인
-function isAdminLoggedIn() {
-  return localStorage.getItem(AUTH_KEY) === "ok";
+async function isAdminLoggedIn() {
+  try {
+    const client = await getSupabaseClient();
+    const { data, error } = await client.auth.getSession();
+    if (error) return false;
+
+    const user = data?.session?.user;
+    return !!user && user.id === ADMIN_USER_ID;
+  } catch (error) {
+    console.error('[관리자 인증 확인] 오류:', error);
+    return false;
+  }
 }
 
 // 로그아웃
-function adminLogout() {
-  localStorage.removeItem(AUTH_KEY);
-  window.location.href = "login.html";
+async function adminLogout() {
+  try {
+    const client = await getSupabaseClient();
+    await client.auth.signOut();
+  } catch (error) {
+    console.error('[관리자 로그아웃] 오류:', error);
+  }
+  window.location.href = 'login.html';
 }
 
 // admin 페이지 진입 시 필수 호출
-function requireAdminAuth() {
-  if (!isAdminLoggedIn()) {
-    window.location.href = "login.html";
+async function requireAdminAuth() {
+  const ok = await isAdminLoggedIn();
+  if (!ok) {
+    window.location.replace('login.html');
+    return false;
   }
+  document.documentElement.classList.add('admin-auth-ok');
+  return true;
 }
+
+window.adminLogin = adminLogin;
+window.isAdminLoggedIn = isAdminLoggedIn;
+window.adminLogout = adminLogout;
+window.requireAdminAuth = requireAdminAuth;
