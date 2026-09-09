@@ -467,82 +467,59 @@
   
   <!-- 설정 파일 -->
   <script src="js/config.js"></script>
+  <script src="js/equipment-models.js"></script>
 
   <script>
-    // URL에서 파라미터 가져오기
     const urlParams = new URLSearchParams(window.location.search);
     const category = urlParams.get('category');
     const manufacturer = urlParams.get('manufacturer');
 
-    // 모델 데이터 정의
-    const modelsData = {
-      '잉크젯 프린터': {
-        '캐논': ['GX 공통', 'GX5090시리즈', 'GX6090시리즈', 'GX7090시리즈'],
-        'HP': ['HP 공통 (A4)', 'HP 공통 (A3)', 'OJ7720', 'OJ7740', 'OJ9730', 'OJ9120', 'OJ8710', 'OJ8210'],
-        '앱손': ['앱손 공통', 'L6270']
-      },
-      '레이저 프린터': {
-        '캐논': ['캐논 공통', 'C3725', 'C3826', 'C3926'],
-        '삼성': ['삼성 공통', 'X3220', 'X4300'],
-        '리코': ['리코 공통', 'C2010', 'C2510', 'C3510', 'IM2500', 'IM3000']
-      },
-      '공기청정기': {
-        '웰리핏': ['SH-3025', 'SH-4025']
-      }
-    };
-
-    // 카테고리별 색상 클래스
     const categoryColorClass = {
       '잉크젯 프린터': 'cat-inkjet',
       '레이저 프린터': 'cat-laser',
       '공기청정기': 'cat-cleaner'
     };
 
-    // 파라미터 검증
-    if (!category || !manufacturer || !modelsData[category] || !modelsData[category][manufacturer]) {
-      location.href = 'index.html';
-    }
+    document.getElementById('manufacturerName').textContent = manufacturer || '';
+    document.getElementById('pageTitle').textContent = manufacturer ? `${manufacturer} 모델 선택` : '모델 선택';
+    document.getElementById('categoryLink').textContent = category || '';
+    document.getElementById('categoryLink').href = `manufacturers.html?category=${encodeURIComponent(category || '')}`;
 
-    // 페이지 초기화
-    document.getElementById('manufacturerName').textContent = manufacturer;
-    document.getElementById('pageTitle').textContent = `${manufacturer} 모델 선택`;
-    document.getElementById('categoryLink').textContent = category;
-    document.getElementById('categoryLink').href = `manufacturers.html?category=${encodeURIComponent(category)}`;
-
-    // 모델별 매뉴얼 개수 가져오기
     async function loadModels() {
       try {
-        const models = modelsData[category][manufacturer];
+        if (!category || !manufacturer || !categoryColorClass[category]) {
+          location.href = 'index.html';
+          return;
+        }
+        const catalog = await loadEquipmentCatalog();
+        const models = catalog?.[category]?.[manufacturer];
+        if (!models) {
+          document.getElementById('loadingState').classList.add('hidden');
+          document.getElementById('emptyState').classList.remove('hidden');
+          return;
+        }
         const colorClass = categoryColorClass[category];
         const grid = document.getElementById('modelGrid');
-        
+
         if (models.length === 0) {
           document.getElementById('loadingState').classList.add('hidden');
           document.getElementById('emptyState').classList.remove('hidden');
           return;
         }
 
-        // 각 모델별 매뉴얼 개수 조회
-        const modelsWithCount = await Promise.all(
-          models.map(async (model) => {
-            const { count, error } = await supabase
-              .from('manuals')
-              .select('*', { count: 'exact', head: true })
-              .eq('category', category)
-              .eq('manufacturer', manufacturer)
-              .eq('model', model)
-              .eq('is_published', true);
+        const modelsWithCount = await Promise.all(models.map(async (model) => {
+          const { count, error } = await supabase
+            .from('manuals')
+            .select('*', { count: 'exact', head: true })
+            .eq('category', category)
+            .eq('manufacturer', manufacturer)
+            .eq('model', model)
+            .eq('is_published', true);
+          return { name: model, count: error ? 0 : (count || 0) };
+        }));
 
-            return {
-              name: model,
-              count: error ? 0 : (count || 0)
-            };
-          })
-        );
-
-        // 모델 카드 렌더링
         grid.innerHTML = modelsWithCount.map(model => `
-          <div class="model-card ${colorClass}" onclick="goToManuals('${model.name}')">
+          <div class="model-card ${colorClass}" onclick="goToManuals(${JSON.stringify(model.name).replace(/"/g, '&quot;')})">
             <div class="model-header">
               <div class="model-name">${model.name}</div>
               <div class="model-manufacturer">${manufacturer}</div>
@@ -553,19 +530,16 @@
 
         document.getElementById('loadingState').classList.add('hidden');
         grid.classList.remove('hidden');
-
       } catch (error) {
         console.error('모델 로딩 오류:', error);
         document.getElementById('loadingState').innerHTML = '데이터를 불러오는데 실패했습니다.';
       }
     }
 
-    // 매뉴얼 목록 페이지로 이동
     function goToManuals(model) {
       location.href = `manuals.html?category=${encodeURIComponent(category)}&manufacturer=${encodeURIComponent(manufacturer)}&model=${encodeURIComponent(model)}`;
     }
 
-    // 페이지 로드 시 실행
     loadModels();
   </script>
 </body>

@@ -1,0 +1,19 @@
+# 환경 설정 파일 (민감 정보)
+# config.js는 포함하되, 실제 키는 GitHub Secrets 사용 권장
+
+# 로그
+*.log
+
+# OS 파일
+.DS_Store
+Thumbs.db
+
+# 에디터
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 임시 파일
+*~
+.tmp/

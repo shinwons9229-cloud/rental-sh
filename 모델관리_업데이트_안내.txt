@@ -1,0 +1,43 @@
+시헌테크 A/S 홈페이지 - 모델 관리 기능 업데이트
+================================================
+
+[추가된 기능]
+- 관리자 페이지에 "모델 관리" 탭 추가
+- 카테고리/제조사 선택 후 새 모델 추가 가능
+- 새 제조사 직접 입력 가능
+- 추가한 모델이 사용자 제조사/모델 페이지와 매뉴얼 작성 화면에 자동 반영
+- 해당 모델에 매뉴얼이 등록되어 있으면 모델 삭제 방지
+- 기존 모델 목록 그대로 유지
+
+[최초 1회 필수 작업]
+1. Supabase 대시보드 접속
+2. SQL Editor > New query
+3. equipment-models-setup.sql 파일 전체 내용 복사
+4. 붙여넣고 Run 실행
+5. 성공 확인
+
+[홈페이지 업로드]
+이 프로젝트는 GitHub + Cloudflare Pages 자동배포 구조입니다.
+기존 GitHub 저장소에 이 ZIP의 '내용물'을 덮어쓴 뒤 Commit/Push 하세요.
+ZIP 파일 자체를 저장소에 올리는 것이 아닙니다.
+
+변경/추가된 핵심 파일:
+- admin.html
+- manufacturers.html
+- models.html
+- js/admin-supabase.js
+- js/admin-quotes.js
+- js/equipment-models.js (새 파일)
+- equipment-models-setup.sql (새 파일, 배포용이라기보다 Supabase 1회 실행용)
+
+[업데이트 후 확인]
+1. rental-sh.com/admin.html 로그인
+2. 상단 "모델 관리" 탭 클릭
+3. 카테고리 > 제조사 선택
+4. 새 모델명 입력 > 모델 추가
+5. 사용자 페이지에서 해당 제조사 선택 후 새 모델이 나타나는지 확인
+6. 관리자 매뉴얼 작성 화면에서도 새 모델이 선택되는지 확인
+
+[주의]
+- equipment-models-setup.sql을 실행하지 않아도 기존 모델 목록은 기본값으로 표시됩니다.
+- 하지만 관리자에서 새 모델을 저장하려면 SQL 실행이 반드시 필요합니다.
