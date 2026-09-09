@@ -470,49 +470,72 @@
   
   <!-- 설정 파일 -->
   <script src="js/config.js"></script>
-  <script src="js/equipment-models.js"></script>
 
   <script>
+    // URL에서 카테고리 파라미터 가져오기
     const urlParams = new URLSearchParams(window.location.search);
     const category = urlParams.get('category');
 
+    // 제조사 데이터 정의
+    const manufacturersData = {
+      '잉크젯 프린터': [
+        { name: '캐논', models: ['GX 공통', 'GX5090시리즈', 'GX6090시리즈', 'GX7090시리즈'] },
+        { name: 'HP', models: ['HP 공통 (A4)', 'HP 공통 (A3)', 'OJ7720', 'OJ7740', 'OJ9730', 'OJ9120', 'OJ8710', 'OJ8210'] },
+        { name: '앱손', models: ['앱손 공통', 'L6270'] }
+      ],
+      '레이저 프린터': [
+        { name: '캐논', models: ['캐논 공통', 'C3725', 'C3826', 'C3926'] },
+        { name: '삼성', models: ['삼성 공통', 'X3220', 'X4300'] },
+        { name: '리코', models: ['리코 공통', 'C2010', 'C2510', 'C3510', 'IM2500', 'IM3000'] }
+      ],
+      '공기청정기': [
+        { name: '웰리핏', models: ['SH-3025', 'SH-4025'] }
+      ]
+    };
+
+    // 카테고리별 색상 클래스
     const categoryColorClass = {
       '잉크젯 프린터': 'cat-inkjet',
       '레이저 프린터': 'cat-laser',
       '공기청정기': 'cat-cleaner'
     };
 
-    document.getElementById('categoryName').textContent = category || '';
-    document.getElementById('pageTitle').textContent = category ? `${category} 제조사 선택` : '제조사 선택';
+    // 카테고리가 없으면 홈으로 리다이렉트
+    if (!category || !manufacturersData[category]) {
+      location.href = 'index.html';
+    }
 
+    // 페이지 초기화
+    document.getElementById('categoryName').textContent = category;
+    document.getElementById('pageTitle').textContent = `${category} 제조사 선택`;
+
+    // 제조사별 매뉴얼 개수 가져오기
     async function loadManufacturers() {
       try {
-        if (!category || !categoryColorClass[category]) {
-          location.href = 'index.html';
-          return;
-        }
-        const catalog = await loadEquipmentCatalog();
-        const categoryData = catalog[category];
-        if (!categoryData) {
-          document.getElementById('loadingState').innerHTML = '등록된 제조사가 없습니다.';
-          return;
-        }
-        const manufacturers = Object.keys(categoryData).map(name => ({ name, models: categoryData[name] }));
+        const manufacturers = manufacturersData[category];
         const colorClass = categoryColorClass[category];
         const grid = document.getElementById('manufacturerGrid');
+        
+        // 각 제조사별 매뉴얼 개수 조회
+        const manufacturersWithCount = await Promise.all(
+          manufacturers.map(async (mf) => {
+            const { count, error } = await supabase
+              .from('manuals')
+              .select('*', { count: 'exact', head: true })
+              .eq('category', category)
+              .eq('manufacturer', mf.name)
+              .eq('is_published', true);
 
-        const manufacturersWithCount = await Promise.all(manufacturers.map(async (mf) => {
-          const { count, error } = await supabase
-            .from('manuals')
-            .select('*', { count: 'exact', head: true })
-            .eq('category', category)
-            .eq('manufacturer', mf.name)
-            .eq('is_published', true);
-          return { ...mf, count: error ? 0 : (count || 0) };
-        }));
+            return {
+              ...mf,
+              count: error ? 0 : (count || 0)
+            };
+          })
+        );
 
+        // 제조사 카드 렌더링
         grid.innerHTML = manufacturersWithCount.map(mf => `
-          <div class="manufacturer-card ${colorClass}" onclick="goToModels(${JSON.stringify(mf.name).replace(/"/g, '&quot;')})">
+          <div class="manufacturer-card ${colorClass}" onclick="goToModels('${mf.name}')">
             <div class="manufacturer-name">${mf.name}</div>
             <div class="manufacturer-count">${mf.count}개의 매뉴얼</div>
             <div class="manufacturer-badge">${category}</div>
@@ -521,17 +544,28 @@
 
         document.getElementById('loadingState').classList.add('hidden');
         grid.classList.remove('hidden');
+
       } catch (error) {
         console.error('제조사 로딩 오류:', error);
         document.getElementById('loadingState').innerHTML = '데이터를 불러오는데 실패했습니다.';
       }
     }
 
+    // 모델 페이지로 이동
     function goToModels(manufacturer) {
       location.href = `models.html?category=${encodeURIComponent(category)}&manufacturer=${encodeURIComponent(manufacturer)}`;
     }
 
-    loadManufacturers();
+    // Supabase 클라이언트 준비 후 실행
+    function waitAndLoad() {
+      if (window.supabase && typeof window.supabase.from === 'function') {
+        loadManufacturers();
+      } else {
+        setTimeout(waitAndLoad, 30);
+      }
+    }
+    waitAndLoad();
+
   </script>
 </body>
 </html>

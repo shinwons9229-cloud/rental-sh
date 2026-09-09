@@ -39,7 +39,6 @@
             <div class="admin-tabs">
                 <button class="tab-btn active" onclick="switchTab('manuals')">매뉴얼 관리</button>
                 <button class="tab-btn" onclick="switchTab('quotes')">견적문의 관리</button>
-                <button class="tab-btn" onclick="switchTab('models')">모델 관리</button>
             </div>
 
             <!-- 매뉴얼 관리 탭 -->
@@ -248,47 +247,6 @@
             </section>
             </div>
             <!-- 견적문의 관리 탭 끝 -->
-
-            <!-- 모델 관리 탭 -->
-            <div id="modelsTab" class="tab-content">
-            <section class="admin-section">
-                <div class="section-header">
-                    <h2 class="section-title">장비 모델 관리</h2>
-                </div>
-                <form id="equipmentModelForm" class="admin-form" onsubmit="addEquipmentModel(event)" style="margin-bottom: 28px;">
-                    <div class="form-group">
-                        <label class="form-label" for="modelManageCategory">카테고리</label>
-                        <select id="modelManageCategory" class="form-select" required onchange="updateModelManageManufacturers()">
-                            <option value="">카테고리 선택</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="modelManageManufacturer">제조사</label>
-                        <select id="modelManageManufacturer" class="form-select" required onchange="toggleNewManufacturerInput()">
-                            <option value="">먼저 카테고리를 선택하세요</option>
-                        </select>
-                    </div>
-                    <div id="newManufacturerWrap" class="form-group" style="display:none;">
-                        <label class="form-label" for="newManufacturer">새 제조사명</label>
-                        <input id="newManufacturer" class="form-input" type="text" placeholder="예: 브라더">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="newModelName">새 모델명</label>
-                        <input id="newModelName" class="form-input" type="text" placeholder="예: L6390" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">모델 추가</button>
-                    <small style="display:block;margin-top:10px;color:var(--color-label);">추가한 모델은 사용자 모델 선택 화면과 매뉴얼 작성 화면에 바로 반영됩니다.</small>
-                </form>
-
-                <div class="admin-table-wrapper">
-                    <table class="admin-table">
-                        <thead><tr><th>카테고리</th><th>제조사</th><th>모델</th><th style="width:100px;">관리</th></tr></thead>
-                        <tbody id="equipmentModelList"></tbody>
-                    </table>
-                </div>
-            </section>
-            </div>
-            <!-- 모델 관리 탭 끝 -->
         </div>
     </main>
 
@@ -408,7 +366,6 @@
     <script src="js/config.js"></script>
     
     <!-- 관리자 스크립트 -->
-    <script src="js/equipment-models.js"></script>
     <script src="js/admin-supabase.js"></script>
     <script src="js/admin-quotes.js"></script>
 </body>

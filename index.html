@@ -842,7 +842,7 @@
     async function loadCategoryCounts() {
       try {
         // Supabase가 초기화될 때까지 대기
-        if (!window.supabase?.from) {
+        if (!window.supabase || typeof window.supabase.from !== 'function') {
           console.log('Supabase 초기화 대기 중...');
           setTimeout(loadCategoryCounts, 100);
           return;
