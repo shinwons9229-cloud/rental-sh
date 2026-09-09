@@ -20,6 +20,10 @@ function switchTab(tabName) {
         document.querySelector('.tab-btn:nth-child(2)').classList.add('active');
         document.getElementById('quotesTab').classList.add('active');
         loadQuotes(); // 견적문의 탭 열 때 데이터 로드
+    } else if (tabName === 'models') {
+        document.querySelector('.tab-btn:nth-child(3)').classList.add('active');
+        document.getElementById('modelsTab').classList.add('active');
+        if (typeof loadEquipmentModelAdmin === 'function') loadEquipmentModelAdmin();
     }
 }
 

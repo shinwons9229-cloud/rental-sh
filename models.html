@@ -467,6 +467,7 @@
   
   <!-- 설정 파일 -->
   <script src="js/config.js"></script>
+  <script src="js/equipment-models.js"></script>
 
   <script>
     // URL에서 파라미터 가져오기
@@ -512,6 +513,17 @@
     // 모델별 매뉴얼 개수 가져오기
     async function loadModels() {
       try {
+        // 기존 모델 목록은 그대로 유지하고 DB에서 추가된 모델만 병합합니다.
+        // DB 조회가 실패해도 기존 사이트 기능에는 영향이 없습니다.
+        try {
+          if (window.STEquipmentModels) {
+            const dbRows = await window.STEquipmentModels.getDbRows();
+            dbRows.filter(r => r.category === category && r.manufacturer === manufacturer).forEach(r => {
+              if (!modelsData[category][manufacturer].includes(r.model)) modelsData[category][manufacturer].push(r.model);
+            });
+          }
+        } catch (e) { console.warn('[모델관리] 모델 목록 병합 실패 - 기존 목록 사용:', e); }
+
         const models = modelsData[category][manufacturer];
         const colorClass = categoryColorClass[category];
         const grid = document.getElementById('modelGrid');

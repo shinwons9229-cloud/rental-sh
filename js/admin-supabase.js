@@ -29,8 +29,25 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // 관리자 페이지 초기화
-function initializeAdmin() {
+async function initializeAdmin() {
     setupEventListeners();
+
+    // 모델 목록 추가 기능은 부가 기능입니다. 실패해도 기존 매뉴얼 로딩은 그대로 진행합니다.
+    try {
+        if (window.STEquipmentModels) {
+            const dbRows = await window.STEquipmentModels.getDbRows();
+            dbRows.forEach(row => {
+                manufacturersData[row.category] ||= {};
+                manufacturersData[row.category][row.manufacturer] ||= [];
+                if (!manufacturersData[row.category][row.manufacturer].includes(row.model)) {
+                    manufacturersData[row.category][row.manufacturer].push(row.model);
+                }
+            });
+        }
+    } catch (error) {
+        console.warn('[모델관리] 관리자 모델 목록 병합 실패 - 기존 목록으로 계속:', error);
+    }
+
     loadAdminManuals();
 }
 

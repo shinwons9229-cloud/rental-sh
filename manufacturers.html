@@ -470,6 +470,7 @@
   
   <!-- 설정 파일 -->
   <script src="js/config.js"></script>
+  <script src="js/equipment-models.js"></script>
 
   <script>
     // URL에서 카테고리 파라미터 가져오기
@@ -512,6 +513,22 @@
     // 제조사별 매뉴얼 개수 가져오기
     async function loadManufacturers() {
       try {
+        // 기존 하드코딩 목록을 기준으로 하고, DB에 추가된 모델만 안전하게 병합합니다.
+        // DB 조회가 실패해도 아래 기존 목록으로 정상 동작합니다.
+        try {
+          if (window.STEquipmentModels) {
+            const dbRows = await window.STEquipmentModels.getDbRows();
+            dbRows.filter(r => r.category === category).forEach(r => {
+              let mf = manufacturersData[category].find(x => x.name === r.manufacturer);
+              if (!mf) {
+                mf = { name: r.manufacturer, models: [] };
+                manufacturersData[category].push(mf);
+              }
+              if (!mf.models.includes(r.model)) mf.models.push(r.model);
+            });
+          }
+        } catch (e) { console.warn('[모델관리] 제조사 목록 병합 실패 - 기존 목록 사용:', e); }
+
         const manufacturers = manufacturersData[category];
         const colorClass = categoryColorClass[category];
         const grid = document.getElementById('manufacturerGrid');
@@ -556,16 +573,8 @@
       location.href = `models.html?category=${encodeURIComponent(category)}&manufacturer=${encodeURIComponent(manufacturer)}`;
     }
 
-    // Supabase 클라이언트 준비 후 실행
-    function waitAndLoad() {
-      if (window.supabase && typeof window.supabase.from === 'function') {
-        loadManufacturers();
-      } else {
-        setTimeout(waitAndLoad, 30);
-      }
-    }
-    waitAndLoad();
-
+    // 페이지 로드 시 실행
+    loadManufacturers();
   </script>
 </body>
 </html>
